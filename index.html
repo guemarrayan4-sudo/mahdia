@@ -1,0 +1,3871 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مهدية · الدليل الذهبي | ولاية تيارت - الجزائر</title>
+  <meta name="description" content="الدليل الشامل والرسمي لمدينة مهدية بولاية تيارت، يضم كافة المرافق، الإدارات، المساجد، المدارس، والمحلات مع مواقيت الصلاة والخرائط.">
+  <meta name="theme-color" content="#043224">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+
+  <!-- Google Fonts: Cairo & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Leaflet Maps CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEME DEFINITIONS (Emerald & Gold)
+       ========================================================================== */
+    :root {
+      --primary-dark: #03251a;
+      --primary: #064e3b;
+      --primary-light: #0a7a5a;
+      --primary-soft: #e6f4ef;
+      --gold-dark: #99751d;
+      --gold: #d4af37;
+      --gold-light: #f7e7a9;
+      --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f6e27a 50%, #b8922a 100%);
+      --emerald-gradient: linear-gradient(135deg, #03251a 0%, #064e3b 50%, #0a7a5a 100%);
+      --bg: #fbfbf8;
+      --bg-alt: #f3efe6;
+      --card-bg: #ffffff;
+      --card-border: rgba(6, 78, 59, 0.08);
+      --text: #1a2521;
+      --text-muted: #5e736a;
+      --line: #e4eade;
+      --shadow-sm: 0 4px 12px rgba(4, 50, 36, 0.04);
+      --shadow-md: 0 10px 25px -3px rgba(4, 50, 36, 0.08), 0 4px 6px -2px rgba(4, 50, 36, 0.04);
+      --shadow-lg: 0 20px 35px -5px rgba(4, 50, 36, 0.12), 0 10px 10px -5px rgba(4, 50, 36, 0.04);
+      --radius-sm: 10px;
+      --radius: 18px;
+      --radius-lg: 26px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.dark {
+      --primary-dark: #010d09;
+      --primary: #0a7a5a;
+      --primary-light: #12a57c;
+      --primary-soft: #08261d;
+      --bg: #091310;
+      --bg-alt: #0d1a16;
+      --card-bg: #12221d;
+      --card-border: rgba(212, 175, 55, 0.15);
+      --text: #f0fdf4;
+      --text-muted: #8fa99e;
+      --line: #1c362e;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       TOP STATUS BAR & BANNER
+       ========================================================================== */
+    .top-bar {
+      background: var(--primary-dark);
+      color: #e5f3ee;
+      font-size: 12.5px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .top-bar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .top-bar-left, .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .top-badge i {
+      color: var(--gold);
+    }
+    .db-badge-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: var(--transition);
+    }
+    .db-badge-indicator:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .db-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    .db-dot.warning {
+      background: #f59e0b;
+    }
+
+    /* ==========================================================================
+       MAIN NAVIGATION BAR (Sticky Glassmorphism)
+       ========================================================================== */
+    header.main-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      transition: var(--transition);
+    }
+    body.dark header.main-header {
+      background: rgba(18, 34, 29, 0.92);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 74px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--primary);
+    }
+    body.dark .brand {
+      color: #fff;
+    }
+    .brand-logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--emerald-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 20px;
+      box-shadow: 0 6px 16px rgba(6, 78, 59, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+    }
+    .brand-text small {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      letter-spacing: 0.5px;
+    }
+    body.dark .brand-text small {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text);
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+    body.dark .nav-link:hover, body.dark .nav-link.active {
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .action-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+    .admin-pill-btn {
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: var(--emerald-gradient);
+      color: #fff;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: var(--transition);
+    }
+    .admin-pill-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(6, 78, 59, 0.35);
+      border-color: var(--gold);
+    }
+    .menu-toggle-btn {
+      display: none;
+      font-size: 22px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text);
+      padding: 8px;
+    }
+
+    /* Mobile Drawer */
+    .mobile-menu-drawer {
+      display: none;
+      position: fixed;
+      top: 74px;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      padding: 20px;
+      border-bottom: 2px solid var(--gold);
+      box-shadow: var(--shadow-lg);
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+    .mobile-menu-drawer.open {
+      display: flex;
+    }
+
+    /* ==========================================================================
+       HERO SECTION (Luxury Animated Gradient with Mahdia Crest)
+       ========================================================================== */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, #03251a 0%, #064e3b 40%, #0f5a45 75%, #2a4c3f 100%);
+      color: #fff;
+      padding: 80px 0 60px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(212, 175, 55, 0.18) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .hero-glow-blob {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%);
+      top: -100px;
+      left: -100px;
+      border-radius: 50%;
+      filter: blur(50px);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-badge-capsule {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 40px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-badge-capsule span.pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+    }
+    .hero h1 {
+      font-size: clamp(34px, 4.8vw, 54px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .hero h1 span.gold-txt {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    .hero p.lead {
+      font-size: 17px;
+      opacity: 0.92;
+      line-height: 1.8;
+      max-width: 620px;
+      margin-bottom: 30px;
+    }
+
+    /* Hero Search Bar */
+    .hero-search-box {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      max-width: 600px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+    .hero-search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 12px 18px;
+      font-size: 15px;
+      color: #fff;
+    }
+    .hero-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .hero-search-btn {
+      background: var(--gold-gradient);
+      color: #1a1605;
+      font-weight: 800;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .hero-search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Hero Quick Buttons */
+    .hero-quick-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .btn-hero-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .btn-hero-action:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Left Card (Weather & City Stats Card) */
+    .hero-card-panel {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .hero-card-header h3 {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold-light);
+    }
+    .hero-card-header .live-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* Weather box inside hero */
+    .hero-weather-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .weather-temp {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: 'Manrope', sans-serif;
+      color: #fff;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .weather-temp small {
+      font-size: 16px;
+      color: var(--gold-light);
+    }
+    .weather-info {
+      text-align: left;
+    }
+    .weather-info .city {
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--gold-light);
+    }
+    .weather-info .condition {
+      font-size: 12.5px;
+      opacity: 0.85;
+    }
+
+    .hero-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .hero-stat-box {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .hero-stat-box:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: var(--gold);
+    }
+    .hero-stat-box .num {
+      font-size: 26px;
+      font-weight: 900;
+      font-family: 'Manrope', sans-serif;
+      color: var(--gold-light);
+      display: block;
+      line-height: 1.2;
+    }
+    .hero-stat-box .lbl {
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    /* ==========================================================================
+       PRAYER TIMES COMPONENT (AlAdhan API & Local Calculation)
+       ========================================================================== */
+    .prayer-section-wrapper {
+      margin-top: -35px;
+      position: relative;
+      z-index: 10;
+    }
+    .prayer-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 24px 30px;
+      box-shadow: var(--shadow-lg);
+    }
+    .prayer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+    .prayer-header-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .prayer-header-title i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .prayer-header-title h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    body.dark .prayer-header-title h2 {
+      color: var(--gold-light);
+    }
+    .prayer-header-title span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .live-clock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--line);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--primary);
+      letter-spacing: 1px;
+      direction: ltr;
+    }
+    body.dark .live-clock-pill {
+      color: var(--gold);
+      background: #0d1a16;
+    }
+
+    .prayer-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+    .prayer-item {
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 10px;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+    }
+    .prayer-item.active {
+      background: var(--emerald-gradient);
+      border-color: var(--gold);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(6, 78, 59, 0.3);
+      transform: translateY(-4px);
+    }
+    .prayer-item.active .prayer-time {
+      color: var(--gold-light);
+    }
+    .prayer-item.active .prayer-badge {
+      display: block;
+    }
+    .prayer-badge {
+      display: none;
+      position: absolute;
+      top: -10px;
+      right: 50%;
+      transform: translateX(50%);
+      background: var(--gold-gradient);
+      color: #1a1605;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+    .prayer-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .prayer-icon {
+      font-size: 18px;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--gold);
+    }
+    .prayer-time {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      direction: ltr;
+    }
+    body.dark .prayer-time {
+      color: var(--gold);
+    }
+    .prayer-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .next-prayer-countdown span.highlight {
+      font-weight: 800;
+      color: var(--primary);
+      font-family: 'Manrope', sans-serif;
+    }
+    body.dark .next-prayer-countdown span.highlight {
+      color: var(--gold);
+    }
+
+    /* ==========================================================================
+       SECTION HEADERS
+       ========================================================================== */
+    .section-padding {
+      padding: 75px 0;
+    }
+    .section-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 16px;
+      border-radius: 30px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12.5px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      border: 1px solid rgba(6, 78, 59, 0.15);
+    }
+    body.dark .section-tag {
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold);
+      border-color: rgba(212, 175, 55, 0.25);
+    }
+    .section-head h2 {
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 900;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .section-head p {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       DIRECTORY & PLACES SECTION
+       ========================================================================== */
+    .directory-toolbar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 22px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .toolbar-row-top {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+    .search-input-wrapper i.search-icon {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+    .search-input-wrapper input {
+      width: 100%;
+      padding: 13px 44px 13px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input-wrapper input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+
+    .view-switcher {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .view-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    .view-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    body.dark .view-btn.active {
+      color: var(--gold);
+      background: #182e27;
+    }
+
+    /* Category Chips Filter Bar */
+    .category-chips-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+    }
+    .category-chips-bar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .category-chips-bar::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 4px;
+    }
+    .cat-chip {
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    .cat-chip:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .cat-chip.active {
+      background: var(--emerald-gradient);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(6, 78, 59, 0.25);
+    }
+    body.dark .cat-chip.active {
+      border-color: var(--gold);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+    }
+    .cat-chip .chip-count {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 1px 7px;
+      border-radius: 12px;
+      font-size: 10.5px;
+      font-family: 'Manrope', sans-serif;
+    }
+    .cat-chip.active .chip-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    /* Results Counter Bar */
+    .results-count-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .results-count-bar strong {
+      color: var(--primary);
+    }
+    body.dark .results-count-bar strong {
+      color: var(--gold);
+    }
+
+    /* Cards Grid */
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 24px;
+    }
+    .place-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+    }
+    .place-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+    .card-cover {
+      height: 190px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      background-color: #1a2d24;
+    }
+    .card-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+    }
+    .card-category-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--primary-dark);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 800;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-badge-verified {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      background: rgba(16, 185, 129, 0.9);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .card-cover-title {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      left: 16px;
+      z-index: 2;
+      color: #fff;
+    }
+    .card-cover-title h3 {
+      font-size: 19px;
+      font-weight: 800;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 12px;
+    }
+    .card-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .card-coords {
+      font-family: 'Manrope', sans-serif;
+      direction: ltr;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-phone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      direction: ltr;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    body.dark .card-phone-badge {
+      color: var(--gold);
+    }
+    .card-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .btn-card {
+      border: none;
+      padding: 9px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition);
+      text-align: center;
+    }
+    .btn-card.primary {
+      background: var(--emerald-gradient);
+      color: #fff;
+    }
+    .btn-card.primary:hover {
+      box-shadow: 0 4px 12px rgba(6, 78, 59, 0.3);
+      border-color: var(--gold);
+    }
+    .btn-card.outline {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+    .btn-card.outline:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-card.gold-soft {
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-dark);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    body.dark .btn-card.gold-soft {
+      color: var(--gold-light);
+    }
+
+    /* List View (Alternate) */
+    .places-list-view {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .place-list-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      transition: var(--transition);
+    }
+    .place-list-item:hover {
+      transform: translateX(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    .list-item-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .list-item-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .list-item-info h4 {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+    .list-item-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .list-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Empty state */
+    .empty-directory-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      border: 2px dashed var(--line);
+      border-radius: var(--radius-lg);
+    }
+    .empty-directory-state i {
+      font-size: 48px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .empty-directory-state h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    /* ==========================================================================
+       INTERACTIVE LEAFLET MAP SECTION
+       ========================================================================== */
+    .map-container-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .map-header-bar {
+      padding: 18px 24px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .map-header-info h3 {
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+    }
+    body.dark .map-header-info h3 {
+      color: var(--gold-light);
+    }
+    .map-actions-bar {
+      display: flex;
+      gap: 10px;
+    }
+    #mahdiaLeafletMap {
+      width: 100%;
+      height: 520px;
+      background: #e5e3df;
+      z-index: 1;
+    }
+
+    /* ==========================================================================
+       EMERGENCY & PUBLIC SERVICES SECTION
+       ========================================================================== */
+    .emergency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .emergency-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .emergency-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--primary);
+    }
+    .emergency-card.red::before {
+      background: #ef4444;
+    }
+    .emergency-card.blue::before {
+      background: #3b82f6;
+    }
+    .emergency-card.green::before {
+      background: #10b981;
+    }
+    .emergency-card.gold::before {
+      background: var(--gold);
+    }
+    .emergency-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .emergency-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .emergency-card.red .emergency-icon {
+      color: #ef4444;
+      background: #fee2e2;
+    }
+    .emergency-card.blue .emergency-icon {
+      color: #3b82f6;
+      background: #dbeafe;
+    }
+    .emergency-info h4 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .emergency-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .emergency-phone-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--primary);
+      direction: ltr;
+    }
+    body.dark .emergency-phone-btn {
+      color: var(--gold);
+    }
+
+    /* ==========================================================================
+       HISTORY & HERITAGE SECTION (Timeline)
+       ========================================================================== */
+    .history-card-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+    }
+    .history-grid-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .history-text-col h3 {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+    body.dark .history-text-col h3 {
+      color: var(--gold-light);
+    }
+    .history-text-col p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .history-timeline {
+      border-right: 3px solid var(--gold);
+      padding-right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .timeline-node {
+      position: relative;
+    }
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      right: -31px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    }
+    .timeline-node .year {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      color: var(--gold-dark);
+      font-size: 17px;
+    }
+    body.dark .timeline-node .year {
+      color: var(--gold);
+    }
+    .timeline-node h4 {
+      font-size: 16px;
+      margin: 4px 0 6px;
+    }
+    .timeline-node p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       PHOTO GALLERY SECTION
+       ========================================================================== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .gallery-thumb {
+      border-radius: var(--radius);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      position: relative;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-thumb:hover img {
+      transform: scale(1.08);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(3, 37, 26, 0.85) 0%, transparent 60%);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      color: #fff;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    .gallery-thumb:hover .gallery-overlay {
+      opacity: 1;
+    }
+    .gallery-overlay span {
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+
+    /* ==========================================================================
+       FOOTER
+       ========================================================================== */
+    footer.main-footer {
+      background: #021a12;
+      color: #cde0d8;
+      padding: 60px 0 30px;
+      border-top: 2px solid rgba(212, 175, 55, 0.3);
+      margin-top: 40px;
+    }
+    .footer-content-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .footer-brand-info h3 {
+      font-size: 22px;
+      color: #fff;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+    .footer-brand-info h3 span {
+      color: var(--gold);
+    }
+    .footer-brand-info p {
+      font-size: 14px;
+      line-height: 1.7;
+      opacity: 0.85;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+    .footer-social-row {
+      display: flex;
+      gap: 12px;
+    }
+    .footer-social-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: var(--transition);
+    }
+    .footer-social-btn:hover {
+      background: var(--gold);
+      color: #1a1605;
+      transform: translateY(-3px);
+    }
+    .footer-social-btn.ig:hover {
+      background: #E4405F;
+      color: #fff;
+    }
+    .footer-links-col h4 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 18px;
+      position: relative;
+      padding-bottom: 8px;
+    }
+    .footer-links-col h4::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 30px;
+      height: 2px;
+      background: var(--gold);
+    }
+    .footer-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links-list a {
+      font-size: 13.5px;
+      opacity: 0.8;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-links-list a:hover {
+      opacity: 1;
+      color: var(--gold);
+      transform: translateX(-4px);
+    }
+    .footer-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding-top: 25px;
+      font-size: 13px;
+      opacity: 0.75;
+    }
+    .footer-bottom-bar a {
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       MODALS (Admin Login, Add/Edit Place, Details, Lightbox, Settings)
+       ========================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 20, 15, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.show {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    .modal-backdrop.show .modal-box {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 20px 26px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      z-index: 10;
+    }
+    .modal-header h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    body.dark .modal-header h3 {
+      color: var(--gold-light);
+    }
+    .modal-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .modal-close-btn:hover {
+      background: #ef4444;
+      color: #fff;
+      border-color: #ef4444;
+    }
+    .modal-body {
+      padding: 26px;
+    }
+    .modal-footer {
+      padding: 16px 26px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: var(--bg);
+      border-bottom-left-radius: var(--radius-lg);
+      border-bottom-right-radius: var(--radius-lg);
+    }
+
+    /* Form controls inside modal */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group label span.req {
+      color: #ef4444;
+    }
+    .form-control {
+      width: 100%;
+      padding: 11px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-soft);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* Details Modal Custom Styling */
+    .details-cover {
+      height: 240px;
+      border-radius: var(--radius);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .details-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+    }
+    .details-gallery-thumbs {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .details-gallery-thumb {
+      width: 70px;
+      height: 70px;
+      border-radius: 10px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: var(--transition);
+    }
+    .details-gallery-thumb:hover, .details-gallery-thumb.active {
+      border-color: var(--gold);
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 3000;
+      pointer-events: none;
+    }
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Admin Panel View Inside Page (or Drawer) */
+    .admin-bar-active {
+      background: var(--gold-gradient);
+      color: #1a1605;
+      padding: 10px 0;
+      font-weight: 800;
+      font-size: 13px;
+      display: none;
+    }
+    .admin-bar-active .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .prayer-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .history-grid-split {
+        grid-template-columns: 1fr;
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-content-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .menu-toggle-btn {
+        display: block;
+      }
+      .places-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-stats-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .footer-content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 520px) {
+      .prayer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .top-bar-left, .top-bar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .hero-stats-row {
+        grid-template-columns: 1fr;
+      }
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+      .card-actions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Info Bar -->
+  <div class="top-bar">
+    <div class="container">
+      <div class="top-bar-left">
+        <span class="top-badge"><i class="fa-solid fa-location-dot"></i> مهدية، ولاية تيارت - 14004 الجزائر</span>
+        <span class="top-badge"><i class="fa-solid fa-compass"></i> 35.43057, 1.75495</span>
+      </div>
+      <div class="top-bar-right">
+        <div class="db-badge-indicator" id="dbStatusBadge" onclick="openSettingsModal()" title="انقر لعرض إعدادات قاعدة البيانات">
+          <span class="db-dot" id="dbStatusDot"></span>
+          <span id="dbStatusText">فحص اتصال Supabase...</span>
+          <i class="fa-solid fa-gear" style="font-size: 10px; margin-right: 2px;"></i>
+        </div>
+        <a href="https://www.instagram.com/_rayan____7" target="_blank" class="top-badge" style="color:#f6e27a">
+          <i class="fa-brands fa-instagram"></i> @_rayan____7
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Active Banner (Visible when logged in) -->
+  <div class="admin-bar-active" id="adminActiveBar">
+    <div class="container">
+      <div>
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>أنت الآن في وضع الإشراف (المشرف مفعّل)</span>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn-card primary" onclick="openAddPlaceModal()" style="padding:4px 12px; font-size:12px;">
+          <i class="fa-solid fa-plus"></i> إضافة مكان جديد
+        </button>
+        <button class="btn-card outline" onclick="seedDatabaseToSupabase()" style="padding:4px 12px; font-size:12px;" title="رفع كافة الأماكن الافتراضية إلى قاعدة بيانات Supabase">
+          <i class="fa-solid fa-cloud-arrow-up"></i> رفع ومزامنة البيانات إلى Supabase
+        </button>
+        <button class="btn-card" onclick="adminLogout()" style="padding:4px 12px; font-size:12px; background:#ef4444; color:#fff;">
+          <i class="fa-solid fa-right-from-bracket"></i> خروج
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="container nav-wrap">
+      <a href="#" class="brand">
+        <div class="brand-logo-icon">
+          <i class="fa-solid fa-landmark"></i>
+        </div>
+        <div class="brand-text">
+          مهدية
+          <small>الدليل الذهبي · ولاية تيارت</small>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#hero" class="nav-link active"><i class="fa-solid fa-house"></i> الرئيسية</a>
+        <a href="#prayer" class="nav-link"><i class="fa-solid fa-mosque"></i> مواقيت الصلاة</a>
+        <a href="#directory" class="nav-link"><i class="fa-solid fa-layer-group"></i> الأماكن والخدمات</a>
+        <a href="#map" class="nav-link"><i class="fa-solid fa-map-location-dot"></i> الخريطة</a>
+        <a href="#emergency" class="nav-link"><i class="fa-solid fa-phone-volume"></i> الطوارئ</a>
+        <a href="#history" class="nav-link"><i class="fa-solid fa-monument"></i> تاريخ مهدية</a>
+        <a href="#gallery" class="nav-link"><i class="fa-solid fa-images"></i> المعرض</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="action-btn" id="themeToggleBtn" onclick="toggleDarkMode()" title="تبديل الوضع الليلي / النهاري">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <button class="action-btn" onclick="shareWebsite()" title="مشاركة الدليل">
+          <i class="fa-solid fa-share-nodes"></i>
+        </button>
+        <button class="admin-pill-btn" onclick="handleAdminButtonClick()" id="adminNavBtn">
+          <i class="fa-solid fa-lock"></i> لوحة التحكم
+        </button>
+        <button class="menu-toggle-btn" onclick="toggleMobileMenu()" title="القائمة">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-menu-drawer" id="mobileDrawer">
+    <a href="#hero" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-house"></i> الرئيسية</a>
+    <a href="#prayer" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-mosque"></i> مواقيت الصلاة</a>
+    <a href="#directory" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-layer-group"></i> الأماكن والخدمات</a>
+    <a href="#map" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-map-location-dot"></i> الخريطة التفاعلية</a>
+    <a href="#emergency" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-phone-volume"></i> أرقام الطوارئ</a>
+    <a href="#history" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-monument"></i> تاريخ مهدية</a>
+    <a href="#gallery" class="nav-link" onclick="toggleMobileMenu()"><i class="fa-solid fa-images"></i> معرض الصور</a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-glow-blob"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge-capsule">
+          <span class="pulse-dot"></span>
+          <span>دليل مهدية الرقمي الذكي 2026</span>
+          <span style="opacity:0.6">|</span>
+          <span>تيارت - الجزائر</span>
+        </div>
+        <h1>
+          اكتشف كل ما في مهدية<br>
+          <span class="gold-txt">في دليل ذهبي موحد.</span>
+        </h1>
+        <p class="lead">
+          منصتك الشاملة لخدمات مدينة مهدية: المؤسسات الإدارية، المراكز الصحية، المدارس، المساجد، البنوك، والمطاعم مع خرائط GPS دقيقة ومواقيت صلاة حية.
+        </p>
+
+        <!-- Direct Search in Hero -->
+        <div class="hero-search-box">
+          <i class="fa-solid fa-magnifying-glass" style="margin: auto 12px; color: var(--gold-light);"></i>
+          <input type="text" class="hero-search-input" id="heroSearchInput" placeholder="ابحث عن مكان، صيدلية، مستشفى، بلدية، مدرسة...">
+          <button class="hero-search-btn" onclick="executeHeroSearch()">
+            <span>بحث</span>
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+        </div>
+
+        <!-- Hero Quick Action Buttons -->
+        <div class="hero-quick-buttons">
+          <button class="btn-hero-action" onclick="locateUserAndShowDistance()">
+            <i class="fa-solid fa-location-crosshairs" style="color:var(--gold)"></i> تحديد موقعي والمسافة
+          </button>
+          <button class="btn-hero-action" onclick="copyMahdiaCoordinates()">
+            <i class="fa-solid fa-copy" style="color:var(--gold)"></i> نسخ إحداثيات مهدية
+          </button>
+          <a href="#directory" class="btn-hero-action">
+            <i class="fa-solid fa-list-check" style="color:var(--gold)"></i> تصفح الأماكن
+          </a>
+        </div>
+      </div>
+
+      <!-- Hero Weather & Metrics Card -->
+      <div class="hero-card-col">
+        <div class="hero-card-panel">
+          <div class="hero-card-header">
+            <h3><i class="fa-solid fa-cloud-sun"></i> حالة الطقس في مهدية</h3>
+            <span class="live-badge"><i class="fa-solid fa-circle" style="font-size:7px"></i> مباشر الآن</span>
+          </div>
+
+          <!-- Live Weather Box -->
+          <div class="hero-weather-box" id="weatherDisplayBox">
+            <div>
+              <div class="weather-temp" id="weatherTemp">-- <small>°C</small></div>
+              <div style="font-size: 12px; opacity: 0.8; margin-top: 2px;" id="weatherWind">الرياح: -- كم/سا</div>
+            </div>
+            <div class="weather-info">
+              <div class="city">بلدية مهدية</div>
+              <div class="condition" id="weatherDesc">جاري تحميل بيانات الطقس...</div>
+              <div style="font-size: 11px; opacity: 0.7; margin-top: 4px;">ارتفاع: 900م عن سطح البحر</div>
+            </div>
+          </div>
+
+          <!-- Statistics Grid -->
+          <div class="hero-stats-row">
+            <div class="hero-stat-box">
+              <span class="num" id="totalPlacesCount">--</span>
+              <span class="lbl">مكان ومرفق</span>
+            </div>
+            <div class="hero-stat-box">
+              <span class="num" id="totalCategoriesCount">--</span>
+              <span class="lbl">تصنيف خدمات</span>
+            </div>
+            <div class="hero-stat-box">
+              <span class="num">14004</span>
+              <span class="lbl">الرمز البريدي</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prayer Times Section (AlAdhan API + Local Engine) -->
+  <section class="prayer-section-wrapper" id="prayer">
+    <div class="container">
+      <div class="prayer-card">
+        <div class="prayer-header">
+          <div class="prayer-header-title">
+            <i class="fa-solid fa-mosque"></i>
+            <div>
+              <h2>مواقيت الصلاة في مهدية (ولاية تيارت)</h2>
+              <span id="hijriGregorianDate">جاري التحديث...</span>
+            </div>
+          </div>
+          <div class="live-clock-pill">
+            <i class="fa-regular fa-clock" style="color:var(--gold); font-size:16px;"></i>
+            <span id="liveClockDisplay">00:00:00</span>
+          </div>
+        </div>
+
+        <div class="prayer-grid" id="prayerGrid">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="prayer-footer">
+          <div class="next-prayer-countdown">
+            الصلاة القادمة: <strong id="nextPrayerName" style="color:var(--primary); font-weight:800;">--</strong>
+            (متبقي: <span class="highlight" id="nextPrayerRemaining">--:--:--</span>)
+          </div>
+          <div>
+            <span style="font-size:12px; color:var(--text-muted);">
+              <i class="fa-solid fa-compass"></i> اتجاه القبلة من مهدية: 104.5° نحو الجنوب الشرقي
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Directory / Places Section -->
+  <section class="section-padding" id="directory">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag"><i class="fa-solid fa-building-columns"></i> دليل الأماكن والمرافق</span>
+        <h2>دليل خدمات ومؤسسات مهدية</h2>
+        <p>ابحث في الدليل الكامل لكافة المرافق الحكومية، الصحية، التعليمية، والخدمية مع مسارات الوصول وأرقام الهواتف.</p>
+      </div>
+
+      <!-- Directory Toolbar -->
+      <div class="directory-toolbar">
+        <div class="toolbar-row-top">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="directorySearchInput" placeholder="ابحث بالاسم، الوصف، التصنيف، أو رقم الهاتف..." autocomplete="off">
+          </div>
+
+          <!-- View Switcher (Grid / List) -->
+          <div class="view-switcher">
+            <button class="view-btn active" id="btnViewGrid" onclick="switchDirectoryView('grid')">
+              <i class="fa-solid fa-border-all"></i> بطاقات
+            </button>
+            <button class="view-btn" id="btnViewList" onclick="switchDirectoryView('list')">
+              <i class="fa-solid fa-list-ul"></i> قائمة
+            </button>
+          </div>
+
+          <!-- Add place quick button (if admin) -->
+          <button class="btn-card primary" id="quickAddPlaceBtn" onclick="openAddPlaceModal()" style="display:none; padding:10px 18px;">
+            <i class="fa-solid fa-plus"></i> إضافة مكان
+          </button>
+        </div>
+
+        <!-- Categories Filter Bar -->
+        <div class="category-chips-bar" id="categoryChipsContainer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Results Count Bar -->
+      <div class="results-count-bar">
+        <span>عرض النتائج: <strong id="visibleCountText">0</strong> مكان متوفر</span>
+        <span id="activeFilterLabel">التصنيف: الكل</span>
+      </div>
+
+      <!-- Places Cards Grid View -->
+      <div class="places-grid" id="placesCardsGrid">
+        <!-- Cards inserted by JS -->
+      </div>
+
+      <!-- Places Compact List View -->
+      <div class="places-list-view" id="placesListView">
+        <!-- Items inserted by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Leaflet Map Section -->
+  <section class="section-padding" id="map" style="background: var(--bg-alt);">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag"><i class="fa-solid fa-map"></i> خريطة مهدية التفاعلية</span>
+        <h2>الخريطة الحية لمعالم مهدية</h2>
+        <p>استكشف مواقع جميع المؤسسات والمرافق على الخريطة الجغرافية الدقيقة لبلدية مهدية مع إمكانية التوجيه والملاحة المباشرة.</p>
+      </div>
+
+      <div class="map-container-box">
+        <div class="map-header-bar">
+          <div class="map-header-info">
+            <h3><i class="fa-solid fa-location-dot"></i> مهدية (35.43057, 1.75495)</h3>
+            <span style="font-size:12px; color:var(--text-muted);">انقر على أي علامة لمعاينة المكان وتفاصيل الوصول</span>
+          </div>
+          <div class="map-actions-bar">
+            <button class="btn-card outline" onclick="resetMapToMahdiaCenter()">
+              <i class="fa-solid fa-crosshairs"></i> مركز مهدية
+            </button>
+            <button class="btn-card primary" onclick="locateUserAndShowDistance()">
+              <i class="fa-solid fa-location-arrow"></i> موقعي الحالي
+            </button>
+          </div>
+        </div>
+        <div id="mahdiaLeafletMap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Emergency & Public Services Section -->
+  <section class="section-padding" id="emergency">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+          <i class="fa-solid fa-phone-volume"></i> خطوط المساعدة المباشرة
+        </span>
+        <h2>أرقام الطوارئ والخدمات في مهدية</h2>
+        <p>أرقام الاتصال السريع المباشرة لخدمات الإسعاف، الأمن، الصحة، والتدخل السريع على مدار الساعة.</p>
+      </div>
+
+      <div class="emergency-grid">
+        <!-- Civil Protection -->
+        <div class="emergency-card red">
+          <div class="emergency-icon"><i class="fa-solid fa-truck-medical"></i></div>
+          <div class="emergency-info">
+            <h4>الحماية المدنية</h4>
+            <p>وحدة التدخل والإسعاف مهدية</p>
+            <a href="tel:14" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 14 / 1021</a>
+          </div>
+        </div>
+
+        <!-- Police -->
+        <div class="emergency-card blue">
+          <div class="emergency-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="emergency-info">
+            <h4>أمن الدائرة (الشرطة)</h4>
+            <p>مقر الشرطة الحضرية مهدية</p>
+            <a href="tel:17" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 17 / 1548</a>
+          </div>
+        </div>
+
+        <!-- Gendarmerie -->
+        <div class="emergency-card green">
+          <div class="emergency-icon"><i class="fa-solid fa-person-military-pointing"></i></div>
+          <div class="emergency-info">
+            <h4>الدرك الوطني</h4>
+            <p>فرقة الدرك الوطني مهدية</p>
+            <a href="tel:1055" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 1055</a>
+          </div>
+        </div>
+
+        <!-- Hospital -->
+        <div class="emergency-card red">
+          <div class="emergency-icon"><i class="fa-solid fa-hospital"></i></div>
+          <div class="emergency-info">
+            <h4>مستشفى محمد بوضياف</h4>
+            <p>مصلحة الاستعجالات الطبية</p>
+            <a href="tel:046422110" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 046 42 21 10</a>
+          </div>
+        </div>
+
+        <!-- Sonelgaz -->
+        <div class="emergency-card gold">
+          <div class="emergency-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="emergency-info">
+            <h4>سونلغاز (طوارئ الغاز/الكهرباء)</h4>
+            <p>مركز الأعطال والتدخل التقني</p>
+            <a href="tel:3303" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 3303</a>
+          </div>
+        </div>
+
+        <!-- Algérienne Des Eaux -->
+        <div class="emergency-card blue">
+          <div class="emergency-icon"><i class="fa-solid fa-faucet-drip"></i></div>
+          <div class="emergency-info">
+            <h4>الجزائرية للمياه (ADE)</h4>
+            <p>شبكة المياه والتوزيع مهدية</p>
+            <a href="tel:1593" class="emergency-phone-btn"><i class="fa-solid fa-phone"></i> 1593</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- History & Heritage Section -->
+  <section class="section-padding" id="history" style="background: var(--bg-alt);">
+    <div class="container">
+      <div class="history-card-box">
+        <div class="history-grid-split">
+          <div class="history-text-col">
+            <span class="section-tag"><i class="fa-solid fa-landmark"></i> أصالة وتاريخ</span>
+            <h3>مهدية.. لؤلؤة الهضاب العليا بولاية تيارت</h3>
+            <p>
+              تعتبر دائرة وبلدية <strong>مهدية</strong> إحدى أهم حواضر ولاية تيارت، حيث تقع في الجزء الشرقي للولاية على ارتفاع يقارب 900 متر عن سطح البحر. عُرفت تاريخياً خلال الحقبة الاستعمارية باسم <em>بوردو (Burdeau)</em>، واستعادت اسمها الوطني الأصيل "مهدية" بعد استقلال الجزائر.
+            </p>
+            <p>
+              تتميز المدينة بموقعها الاستراتيجي كنقطة وصل حيوية ورابط بين شمال ولاية تيارت ومناطق الهضاب العليا، وتشتهر بثروتها الفلاحية والرعوية، وطيبة وكرم أهلها، وتاريخها النضالي البطولي الخالد في ثورة أول نوفمبر التحريرية المجيدة.
+            </p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <span class="cat-chip"><i class="fa-solid fa-mountain"></i> الارتفاع: 900م</span>
+              <span class="cat-chip"><i class="fa-solid fa-envelope"></i> الرمز: 14004</span>
+              <span class="cat-chip"><i class="fa-solid fa-seedling"></i> طابع فلاحي ورعوي</span>
+            </div>
+          </div>
+
+          <div class="history-timeline-col">
+            <div class="history-timeline">
+              <div class="timeline-node">
+                <span class="year">1885 - 1900</span>
+                <h4>تأسيس التجمع السكاني الحديث</h4>
+                <p>إنشاء البلدية في عهد الاحتلال كمركز استيطاني فلاحي تحت تسمية "بوردو" وربطها بالسكك الحديدية التاريخية.</p>
+              </div>
+              <div class="timeline-node">
+                <span class="year">1954 - 1962</span>
+                <h4>كفاح ثورة التحرير المظفرة</h4>
+                <p>سجلت مهدية وباديتها صفحات ناصعة من التضحية والبطولة وقدمت قوافل من الشهداء الأبرار فداءً للوطن.</p>
+              </div>
+              <div class="timeline-node">
+                <span class="year">1962 - الحاضر</span>
+                <h4>الاستقلال والنهضة التنموية</h4>
+                <p>استرجاع التسمية الجزائرية "مهدية"، وترقيتها إلى مقر دائرة تضم بلديات مهدية، الناظورة، وسبعين.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo Gallery Section -->
+  <section class="section-padding" id="gallery">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag"><i class="fa-solid fa-camera"></i> معرض الصور</span>
+        <h2>معالم وأجواء مهدية</h2>
+        <p>جولة بصرية في شوارع، مساجد، وطبيعة مدينة مهدية الخلابة.</p>
+      </div>
+
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-thumb" onclick="openLightbox('https://images.unsplash.com/photo-1542816417-098367d4f8c6?auto=format&fit=crop&w=1200&q=80', 'المسجد العتيق في مهدية')">
+          <img src="https://images.unsplash.com/photo-1542816417-098367d4f8c6?auto=format&fit=crop&w=600&q=80" alt="المسجد العتيق">
+          <div class="gallery-overlay"><span><i class="fa-solid fa-expand"></i> المسجد العتيق</span></div>
+        </div>
+        <div class="gallery-thumb" onclick="openLightbox('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80', 'طبيعة وسهوب مهدية')">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80" alt="طبيعة وسهوب">
+          <div class="gallery-overlay"><span><i class="fa-solid fa-expand"></i> سهوب وطبيعة مهدية</span></div>
+        </div>
+        <div class="gallery-thumb" onclick="openLightbox('https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80', 'مقر بلدية ودائرة مهدية')">
+          <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=80" alt="المقر الإداري">
+          <div class="gallery-overlay"><span><i class="fa-solid fa-expand"></i> مقرات الإدارة المحلية</span></div>
+        </div>
+        <div class="gallery-thumb" onclick="openLightbox('https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80', 'المؤسسات التعليمية بمهدية')">
+          <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80" alt="المؤسسات التعليمية">
+          <div class="gallery-overlay"><span><i class="fa-solid fa-expand"></i> الصروح التعليمية</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-content-grid">
+        <div class="footer-brand-info">
+          <h3>مهدية · <span>الدليل الذهبي</span></h3>
+          <p>
+            المشروع الرقمي الشامل لتوثيق وتسهيل الوصول إلى كافة الأماكن، الهيئات، والخدمات لمدينة مهدية بولاية تيارت، الجزائر.
+          </p>
+          <div class="footer-social-row">
+            <a href="https://www.instagram.com/_rayan____7" target="_blank" class="footer-social-btn ig" title="Instagram @_rayan____7">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.google.com/maps/search/?api=1&query=Mahdia+Tiaret+Algeria" target="_blank" class="footer-social-btn" title="خرائط Google">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </a>
+            <a href="#prayer" class="footer-social-btn" title="مواقيت الصلاة">
+              <i class="fa-solid fa-mosque"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links-list">
+            <li><a href="#hero"><i class="fa-solid fa-angle-left"></i> الواجهة الرئيسية</a></li>
+            <li><a href="#prayer"><i class="fa-solid fa-angle-left"></i> مواقيت الصلاة</a></li>
+            <li><a href="#directory"><i class="fa-solid fa-angle-left"></i> دليل الأماكن والخدمات</a></li>
+            <li><a href="#map"><i class="fa-solid fa-angle-left"></i> خريطة مهدية التفاعلية</a></li>
+            <li><a href="#emergency"><i class="fa-solid fa-angle-left"></i> أرقام الطوارئ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links-col">
+          <h4>إدارة الموقع وقاعدة البيانات</h4>
+          <ul class="footer-links-list">
+            <li><a href="javascript:void(0)" onclick="handleAdminButtonClick()"><i class="fa-solid fa-shield"></i> لوحة تحكم المشرف</a></li>
+            <li><a href="javascript:void(0)" onclick="openSettingsModal()"><i class="fa-solid fa-database"></i> إعدادات Supabase</a></li>
+            <li><a href="javascript:void(0)" onclick="copyMahdiaCoordinates()"><i class="fa-solid fa-copy"></i> نسخ إحداثيات المدينة</a></li>
+            <li><a href="javascript:void(0)" onclick="shareWebsite()"><i class="fa-solid fa-share-nodes"></i> نشر ومشاركة الرابط</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          جميع الحقوق محفوظة © <span id="currentYearDisplay"></span> مهدية · الدليل الذهبي.
+        </div>
+        <div>
+          تصميم وتطوير بواسطة <a href="https://www.instagram.com/_rayan____7" target="_blank">@_rayan____7</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- 1. Admin Login Modal -->
+  <div class="modal-backdrop" id="adminLoginModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-lock"></i> تسجيل دخول المشرف</h3>
+        <button class="modal-close-btn" onclick="closeModal('adminLoginModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13.5px; color:var(--text-muted); margin-bottom:16px;">
+          أدخل كلمة مرور لوحة التحكم للوصول إلى إدارة الأماكن وإعدادات Supabase.
+        </p>
+        <form onsubmit="verifyAdminPassword(event)">
+          <div class="form-group">
+            <label for="adminPassInput">كلمة المرور <span class="req">*</span></label>
+            <div style="position:relative;">
+              <input type="password" id="adminPassInput" class="form-control" placeholder="أدخل كلمة المرور..." required autocomplete="current-password">
+              <i class="fa-solid fa-eye" id="togglePassVisibility" onclick="togglePasswordInput()" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); cursor:pointer; color:var(--text-muted);"></i>
+            </div>
+          </div>
+          <button type="submit" class="btn-card primary" style="width:100%; padding:12px; font-size:14px;">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> دخول إلى لوحة التحكم
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Add / Edit Place Modal -->
+  <div class="modal-backdrop" id="placeFormModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="placeModalTitle"><i class="fa-solid fa-plus-circle"></i> إضافة مكان جديد</h3>
+        <button class="modal-close-btn" onclick="closeModal('placeFormModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="placeForm" onsubmit="savePlaceForm(event)">
+          <input type="hidden" id="formPlaceId">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formName">اسم المكان أو المؤسسة <span class="req">*</span></label>
+              <input type="text" id="formName" class="form-control" placeholder="مثال: بلدية مهدية" required>
+            </div>
+            <div class="form-group">
+              <label for="formCategory">التصنيف <span class="req">*</span></label>
+              <select id="formCategory" class="form-control" required onchange="handleCategoryChange()">
+                <option value="إدارة">إدارة وحكومة</option>
+                <option value="أمن">أمن وشرطة</option>
+                <option value="صحة">صحة ومستشفيات</option>
+                <option value="صيدليات">صيدليات</option>
+                <option value="مساجد">مساجد</option>
+                <option value="تعليم ابتدائي">تعليم ابتدائي</option>
+                <option value="تعليم متوسط">تعليم متوسط</option>
+                <option value="تعليم ثانوي">تعليم ثانوي</option>
+                <option value="بنوك">بنوك ومؤسسات مالية</option>
+                <option value="بريد">بريد ومواصلات</option>
+                <option value="مطاعم">مطاعم</option>
+                <option value="مقاهي">مقاهي</option>
+                <option value="تجارة">تجارة وأسواق</option>
+                <option value="أخرى">خدمات أخرى</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formIcon">الأيقونة (رمز تعبيري) <span class="req">*</span></label>
+              <input type="text" id="formIcon" class="form-control" placeholder="مثال: 🏛️ أو 🏥 أو 🕌" required>
+            </div>
+            <div class="form-group">
+              <label for="formPhone">رقم الهاتف (اختياري)</label>
+              <input type="text" id="formPhone" class="form-control" placeholder="مثال: 046 42 21 10" dir="ltr">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="formDescription">الوصف أو معلومات المكان</label>
+            <textarea id="formDescription" class="form-control" rows="3" placeholder="وصف موجز للمكان، الخدمات التي يقدمها، أو موقعه بالتفصيل..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formCoords">إحداثيات GPS (خط العرض، خط الطول)</label>
+              <div style="display:flex; gap:6px;">
+                <input type="text" id="formCoords" class="form-control" placeholder="35.43057,1.75495" dir="ltr" required>
+                <button type="button" class="btn-card outline" onclick="setCoordsToMahdiaCenter()" title="استخدام إحداثيات مهدية">
+                  <i class="fa-solid fa-location-crosshairs"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="formSearchQuery">اسم البحث على خرائط Google</label>
+              <input type="text" id="formSearchQuery" class="form-control" placeholder="مثال: Mahdia Town Hall Tiaret">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="formImgKey">صورة نموذجية تلقائية</label>
+              <select id="formImgKey" class="form-control">
+                <option value="admin">إدارة ومقرات</option>
+                <option value="health">صحة ومستشفيات</option>
+                <option value="pharmacy">صيدليات</option>
+                <option value="mosque">مساجد</option>
+                <option value="school">مدارس وتعليم</option>
+                <option value="bank">بنوك ومالية</option>
+                <option value="restaurant">مطاعم</option>
+                <option value="cafe">مقاهي</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="formImage1">رابط صورة مخصصة 1 (اختياري)</label>
+              <input type="url" id="formImage1" class="form-control" placeholder="https://example.com/image.jpg" dir="ltr">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="formImage2">رابط صورة مخصصة 2 (اختياري)</label>
+            <input type="url" id="formImage2" class="form-control" placeholder="https://example.com/image2.jpg" dir="ltr">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-card outline" onclick="closeModal('placeFormModal')">إلغاء</button>
+            <button type="submit" class="btn-card primary" id="btnSavePlaceSubmit">
+              <i class="fa-solid fa-check"></i> حفظ المكان
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Place Details Modal -->
+  <div class="modal-backdrop" id="placeDetailsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="detailModalTitle">تفاصيل المكان</h3>
+        <button class="modal-close-btn" onclick="closeModal('placeDetailsModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="detailModalBody">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Supabase Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal-box" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-database"></i> إعدادات قاعدة بيانات Supabase</h3>
+        <button class="modal-close-btn" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+          يمكنك التحقق من حالة الاتصال بقاعدة بيانات Supabase، أو تحديث مفتاح API (Anon Key) وعنوان المشروع في أي وقت.
+        </p>
+
+        <div class="form-group">
+          <label for="settingsSupabaseUrl">رابط Supabase URL</label>
+          <input type="text" id="settingsSupabaseUrl" class="form-control" dir="ltr" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="settingsSupabaseKey">مفتاح Anon Key</label>
+          <textarea id="settingsSupabaseKey" class="form-control" rows="3" dir="ltr" placeholder="أدخل مفتاح Supabase الكامل هنا..."></textarea>
+          <small style="font-size:11px; color:var(--text-muted); display:block; margin-top:4px;">
+            إذا تم اقتصار المفتاح بـ (...) يمكنك نسخه بالكامل من لوحة Supabase ولصقه هنا ثم حفظ الإعدادات.
+          </small>
+        </div>
+
+        <div style="background:var(--bg-alt); padding:14px; border-radius:12px; margin-bottom:16px; border:1px solid var(--line);">
+          <div style="font-size:12.5px; font-weight:700; margin-bottom:6px;">حالة الاتصال الحالية:</div>
+          <div id="settingsStatusDetails" style="font-size:12px; color:var(--text-muted);">
+            جاري الفحص...
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn-card primary" onclick="saveSupabaseSettings()">
+            <i class="fa-solid fa-floppy-disk"></i> حفظ واختبار الاتصال
+          </button>
+          <button type="button" class="btn-card outline" onclick="testSupabaseConnectionUI()">
+            <i class="fa-solid fa-rotate"></i> إعادة اختبار الاتصال
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Lightbox Modal -->
+  <div class="modal-backdrop" id="lightboxModal" onclick="closeModal('lightboxModal')" style="background:rgba(0,0,0,0.9);">
+    <div style="max-width:900px; width:95%; text-align:center;">
+      <img id="lightboxImage" src="" alt="" style="max-width:100%; max-height:80vh; border-radius:14px; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+      <div id="lightboxCaption" style="color:#fff; margin-top:14px; font-weight:700; font-size:16px;"></div>
+    </div>
+  </div>
+
+  <!-- Toast Element -->
+  <div class="toast-box" id="toastNotification">
+    <i class="fa-solid fa-circle-check" style="color:var(--gold)"></i>
+    <span id="toastMessage">إشعار</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & SUPABASE INTEGRATION
+       ========================================================================== -->
+  <script>
+    /**
+     * ==========================================================================
+     * 1. CONFIGURATION & CONSTANTS
+     * ==========================================================================
+     */
+    const ADMIN_PASSWORD_HASH = "0674960988ggr2005"; // User provided password
+    const MAHDIA_CENTER_COORDS = [35.43057, 1.75495]; // Latitude, Longitude
+
+    // Supabase Configuration
+    const DEFAULT_SUPABASE_URL = "https://cneqytgqefepqhrmytdy.supabase.co";
+    const DEFAULT_SUPABASE_KEY = "sb_publishable_A_ncVEZMzhvf4Yigd029eA_0qjVg...";
+
+    let supabaseUrl = localStorage.getItem("mahdia_sp_url") || DEFAULT_SUPABASE_URL;
+    let supabaseKey = localStorage.getItem("mahdia_sp_key") || DEFAULT_SUPABASE_KEY;
+
+    let supabaseClient = null;
+    let isSupabaseOnline = false;
+    let isAdminLoggedIn = sessionStorage.getItem("mahdia_admin_auth") === "true";
+
+    // Preset thematic images
+    const PRESET_IMAGES = {
+      admin: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=80",
+      health: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1200&q=80",
+      pharmacy: "https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1200&q=80",
+      mosque: "https://images.unsplash.com/photo-1542816417-098367d4f8c6?auto=format&fit=crop&w=1200&q=80",
+      school: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80",
+      bank: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
+      restaurant: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
+      cafe: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1200&q=80"
+    };
+
+    /**
+     * Initial Pre-seeded dataset for Mahdia (matching places schema)
+     * Used for offline/fallback mode and for the 1-click Seed to Supabase function!
+     */
+    const INITIAL_DEFAULT_PLACES = [
+      {
+        id: 1,
+        name: "بلدية مهدية",
+        category: "إدارة",
+        icon: "🏛️",
+        description: "المقر الإداري لبلدية مهدية، تقديم الخدمات البيومترية، الحالة المدنية، والشؤون الاجتماعية والمحلية.",
+        search_query: "Mahdia Town Hall Tiaret Algeria",
+        img_key: "admin",
+        coords: "35.43250,1.75380",
+        phone: "046 42 20 15",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 2,
+        name: "دائرة مهدية",
+        category: "إدارة",
+        icon: "🏢",
+        description: "مقر الدائرة والمصالح الإدارية والولائية التابعة لوزارة الداخلية والجماعات المحلية.",
+        search_query: "Daira de Mahdia Tiaret",
+        img_key: "admin",
+        coords: "35.43120,1.75410",
+        phone: "046 42 21 00",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 3,
+        name: "أمن دائرة مهدية (الشرطة)",
+        category: "أمن",
+        icon: "👮",
+        description: "مقر الشرطة الحضرية لأمن دائرة مهدية، حفظ النظام العام واستقبال شكاوى المواطنين وتأمين المدينة.",
+        search_query: "Commissariat Police Mahdia Tiaret",
+        img_key: "admin",
+        coords: "35.43310,1.75250",
+        phone: "17",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 4,
+        name: "فرقة الدرك الوطني مهدية",
+        category: "أمن",
+        icon: "🛡️",
+        description: "مقر فرقة الدرك الوطني، حماية الطرقات، الأمن الإقليمي، والتدخل السريع لخدمة المواطنين.",
+        search_query: "Gendarmerie Nationale Mahdia Tiaret",
+        img_key: "admin",
+        coords: "35.42890,1.75620",
+        phone: "1055",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 5,
+        name: "مستشفى محمد بوضياف مهدية",
+        category: "صحة",
+        icon: "🏥",
+        description: "المستشفى الرئيسي في مهدية، يقدم خدمات الفحص الطبي المتخصص، الاستعجالات الطبية الجراحية على مدار 24 ساعة.",
+        search_query: "Hopital Mohamed Boudiaf Mahdia Tiaret",
+        img_key: "health",
+        coords: "35.43520,1.75780",
+        phone: "046 42 21 10",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 6,
+        name: "صيدلية المركز",
+        category: "صيدليات",
+        icon: "💊",
+        description: "صيدلية تقع في وسط المدينة، توفر الأدوية والمستلزمات الطبية وشبه الطبية مع مناوبة دورية.",
+        search_query: "Pharmacie Centre Mahdia Tiaret",
+        img_key: "pharmacy",
+        coords: "35.43080,1.75430",
+        phone: "046 42 25 30",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 7,
+        name: "المسجد العتيق",
+        category: "مساجد",
+        icon: "🕌",
+        description: "أحد أقدم وأشهر مساجد مدينة مهدية، تقام فيه الصلوات الخمس والجمعة ودروس التوعية وتحفيظ القرآن الكريم.",
+        search_query: "المسجد العتيق مهدية تيارت",
+        img_key: "mosque",
+        coords: "35.42980,1.75350",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 8,
+        name: "مسجد عمر بن عبد العزيز",
+        category: "مساجد",
+        icon: "🕌",
+        description: "صرح إسلامي متميز في مهدية يضم مدرسة قرآنية ومصلى واسع للمناسبات والجمع والصلوات.",
+        search_query: "مسجد عمر بن عبد العزيز مهدية تيارت",
+        img_key: "mosque",
+        coords: "35.43380,1.75510",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 9,
+        name: "مدرسة الشهيد هيزوم أحميدة",
+        category: "تعليم ابتدائي",
+        icon: "🏫",
+        description: "مؤسسة تربوية ابتدائية عريقة تساهم في تعليم وتنشئة أجيال مهدية.",
+        search_query: "Ecole Primaire Hezoom Ahmed Mahdia",
+        img_key: "school",
+        coords: "35.43180,1.75200",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 10,
+        name: "مدرسة محمد بن حسين أمزيان",
+        category: "تعليم ابتدائي",
+        icon: "🏫",
+        description: "ابتدائية مجهزة تضم أقساماً نموذجية ومطعماً مدرسياً.",
+        search_query: "Ecole Mohamed Ben Hocine Amzyane Mahdia",
+        img_key: "school",
+        coords: "35.43420,1.75330",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 11,
+        name: "متوسطة الشهيد جراد بغالم",
+        category: "تعليم متوسط",
+        icon: "🎓",
+        description: "مؤسسة تعليم متوسط (CEM) ذات نتائج متميزة في شهادة التعليم المتوسط.",
+        search_query: "CEM Djerad Beghalem Mahdia Tiaret",
+        img_key: "school",
+        coords: "35.43290,1.75650",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 12,
+        name: "ثانوية الإخوة بن عمر",
+        category: "تعليم ثانوي",
+        icon: "🎓",
+        description: "الثانوية الرئيسية في مدينة مهدية وتضم مختلف الشعب العلمية، الأدبية، والتسيير والاقتصاد.",
+        search_query: "Lycee Freres Ben Omar Mahdia Tiaret",
+        img_key: "school",
+        coords: "35.43600,1.75400",
+        phone: "046 42 22 40",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 13,
+        name: "بنك الفلاحة والتنمية الريفية (BADR)",
+        category: "بنوك",
+        icon: "🏦",
+        description: "وكالة بنكية تقدم خدمات فتح الحسابات، القروض الفلاحية، وصرف العملات ودعم الاستثمار المحلي.",
+        search_query: "Banque BADR Mahdia Tiaret",
+        img_key: "bank",
+        coords: "35.43150,1.75460",
+        phone: "046 42 20 80",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 14,
+        name: "البنك الوطني الجزائري (BNA)",
+        category: "بنوك",
+        icon: "🏦",
+        description: "وكالة البنك الوطني الجزائري بمهدية لتقديم كافة العمليات المصرفية والتمويلات.",
+        search_query: "Banque BNA Mahdia Tiaret",
+        img_key: "bank",
+        coords: "35.43090,1.75520",
+        phone: "046 42 23 15",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 15,
+        name: "مكتب بريد مهدية المركزي",
+        category: "بريد",
+        icon: "📮",
+        description: "القباضة الرئيسية لبريد الجزائر بمهدية، سحب وإيداع الأموال، الصراف الآلي، والطرود البريدية.",
+        search_query: "Bureau de Poste Mahdia Tiaret",
+        img_key: "admin",
+        coords: "35.43190,1.75420",
+        phone: "1530",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 16,
+        name: "مطعم وضيافة مهدية",
+        category: "مطاعم",
+        icon: "🍽️",
+        description: "مطعم يقدم أشهى الأطباق التقليدية الجزائرية، الشواء، والوجبات العائلية السريعة.",
+        search_query: "Restaurant Mahdia Tiaret",
+        img_key: "restaurant",
+        coords: "35.43020,1.75390",
+        phone: "0670 00 00 00",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 17,
+        name: "مقهى ومحطة مهدية",
+        category: "مقاهي",
+        icon: "☕",
+        description: "فضاء مريح للقاء والأحاديث يقدم القهوة العصرية والشاي والمشروبات الباردة والساخنة.",
+        search_query: "Cafe Mahdia Tiaret",
+        img_key: "cafe",
+        coords: "35.43050,1.75470",
+        phone: "",
+        image1: "",
+        image2: ""
+      },
+      {
+        id: 18,
+        name: "وحدة الحماية المدنية مهدية",
+        category: "أمن",
+        icon: "🚒",
+        description: "مقر الحماية المدنية للإسعاف، إخماد الحرائق، والتدخلات الطارئة على مدار 24 ساعة.",
+        search_query: "Protection Civile Mahdia Tiaret",
+        img_key: "admin",
+        coords: "35.42780,1.75700",
+        phone: "14",
+        image1: "",
+        image2: ""
+      }
+    ];
+
+    // State Variables
+    let placesData = [];
+    let currentCategoryFilter = "الكل";
+    let currentSearchQuery = "";
+    let currentDirectoryView = "grid"; // 'grid' or 'list'
+    let leafletMap = null;
+    let mapMarkersLayer = null;
+
+    /**
+     * ==========================================================================
+     * 2. INITIALIZATION
+     * ==========================================================================
+     */
+    document.addEventListener("DOMContentLoaded", async () => {
+      document.getElementById("currentYearDisplay").textContent = new Date().getFullYear();
+
+      // Check Admin State
+      updateAdminUI();
+
+      // Initialize Supabase Client
+      initSupabaseClient();
+
+      // Load Places Data (Dual engine: Supabase or LocalStorage)
+      await loadPlacesData();
+
+      // Initialize Leaflet Map
+      initLeafletMap();
+
+      // Initialize Clock & Prayers
+      initPrayerTimes();
+
+      // Fetch Weather Data
+      fetchMahdiaWeather();
+
+      // Event listeners
+      document.getElementById("directorySearchInput").addEventListener("input", handleSearchInput);
+      document.getElementById("heroSearchInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") executeHeroSearch();
+      });
+    });
+
+    /**
+     * ==========================================================================
+     * 3. SUPABASE CLIENT & DATA SYNCHRONIZATION
+     * ==========================================================================
+     */
+    function initSupabaseClient() {
+      try {
+        if (window.supabase && supabaseUrl && supabaseKey && !supabaseKey.includes("...")) {
+          supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+          console.log("Supabase client created successfully.");
+        } else {
+          supabaseClient = null;
+          console.warn("Supabase Key incomplete or client not configured yet. Fallback mode active.");
+        }
+      } catch (err) {
+        console.error("Failed to init Supabase client:", err);
+        supabaseClient = null;
+      }
+    }
+
+    async function testSupabaseConnectivity() {
+      const badge = document.getElementById("dbStatusBadge");
+      const dot = document.getElementById("dbStatusDot");
+      const text = document.getElementById("dbStatusText");
+
+      if (!supabaseClient || supabaseKey.includes("...")) {
+        isSupabaseOnline = false;
+        dot.className = "db-dot warning";
+        text.textContent = "يعمل بالذاكرة المحلية (تحديث المفتاح متاح)";
+        return false;
+      }
+
+      try {
+        const { data, error } = await supabaseClient.from("places").select("id").limit(1);
+        if (error) throw error;
+
+        isSupabaseOnline = true;
+        dot.className = "db-dot";
+        text.textContent = "قاعدة Supabase: متصل 🟢";
+        return true;
+      } catch (err) {
+        console.warn("Supabase ping test failed:", err);
+        isSupabaseOnline = false;
+        dot.className = "db-dot warning";
+        text.textContent = "تخزين محلي مؤمن (Supabase غير متاح)";
+        return false;
+      }
+    }
+
+    async function loadPlacesData() {
+      const testResult = await testSupabaseConnectivity();
+
+      if (testResult && supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient
+            .from("places")
+            .select("*")
+            .order("id", { ascending: true });
+
+          if (!error && data && data.length > 0) {
+            placesData = data;
+            // Cache to localStorage
+            localStorage.setItem("mahdia_places_cached", JSON.stringify(data));
+            renderDirectory();
+            return;
+          }
+        } catch (err) {
+          console.warn("Error fetching from Supabase table, falling back:", err);
+        }
+      }
+
+      // Fallback: Read from LocalStorage or use INITIAL_DEFAULT_PLACES
+      const cached = localStorage.getItem("mahdia_places_cached");
+      if (cached) {
+        try {
+          placesData = JSON.parse(cached);
+        } catch (e) {
+          placesData = [...INITIAL_DEFAULT_PLACES];
+        }
+      } else {
+        placesData = [...INITIAL_DEFAULT_PLACES];
+        localStorage.setItem("mahdia_places_cached", JSON.stringify(placesData));
+      }
+
+      renderDirectory();
+    }
+
+    /**
+     * Save data locally
+     */
+    function savePlacesLocally(data) {
+      placesData = data;
+      localStorage.setItem("mahdia_places_cached", JSON.stringify(data));
+      renderDirectory();
+      updateMapMarkers();
+    }
+
+    /**
+     * Seed all default places to Supabase in one click
+     */
+    async function seedDatabaseToSupabase() {
+      if (!isSupabaseOnline || !supabaseClient) {
+        showToast("يرجى التأكد من ربط Supabase بمفتاح صالح أولاً من زر الإعدادات.");
+        openSettingsModal();
+        return;
+      }
+
+      showToast("جاري مزامنة ورفع الأماكن إلى Supabase...");
+      try {
+        const payload = placesData.map(p => ({
+          name: p.name,
+          category: p.category,
+          icon: p.icon || "📍",
+          description: p.description || "",
+          search_query: p.search_query || "",
+          img_key: p.img_key || "admin",
+          coords: p.coords || "35.43057,1.75495",
+          phone: p.phone || "",
+          image1: p.image1 || "",
+          image2: p.image2 || ""
+        }));
+
+        const { data, error } = await supabaseClient
+          .from("places")
+          .insert(payload);
+
+        if (error) throw error;
+
+        showToast("تم رفع وتزامن البيانات بنجاح إلى قاعدة Supabase!");
+        await loadPlacesData();
+      } catch (err) {
+        console.error("Seed error:", err);
+        showToast("فشلت المزامنة: " + (err.message || "تأكد من إنشاء جدول places"));
+      }
+    }
+
+    /**
+     * ==========================================================================
+     * 4. DIRECTORY RENDERING & FILTERING
+     * ==========================================================================
+     */
+    function renderDirectory() {
+      renderCategoryChips();
+      renderPlacesListAndGrid();
+      updateDashboardCounts();
+      updateMapMarkers();
+    }
+
+    function renderCategoryChips() {
+      const container = document.getElementById("categoryChipsContainer");
+      if (!container) return;
+
+      const categories = ["الكل", ...new Set(placesData.map(p => p.category))];
+
+      container.innerHTML = categories.map(cat => {
+        const count = cat === "الكل" ? placesData.length : placesData.filter(p => p.category === cat).length;
+        const isActive = cat === currentCategoryFilter ? "active" : "";
+        return `
+          <button class="cat-chip ${isActive}" onclick="filterByCategory('${cat}')">
+            <span>${cat}</span>
+            <span class="chip-count">${count}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function filterByCategory(cat) {
+      currentCategoryFilter = cat;
+      document.getElementById("activeFilterLabel").textContent = `التصنيف: ${cat}`;
+      renderCategoryChips();
+      renderPlacesListAndGrid();
+    }
+
+    function handleSearchInput(e) {
+      currentSearchQuery = e.target.value.trim().toLowerCase();
+      renderPlacesListAndGrid();
+    }
+
+    function executeHeroSearch() {
+      const q = document.getElementById("heroSearchInput").value.trim();
+      if (q) {
+        currentSearchQuery = q.toLowerCase();
+        document.getElementById("directorySearchInput").value = q;
+        filterByCategory("الكل");
+        window.location.hash = "#directory";
+      }
+    }
+
+    function switchDirectoryView(view) {
+      currentDirectoryView = view;
+      const gridBtn = document.getElementById("btnViewGrid");
+      const listBtn = document.getElementById("btnViewList");
+      const gridEl = document.getElementById("placesCardsGrid");
+      const listEl = document.getElementById("placesListView");
+
+      if (view === "grid") {
+        gridBtn.classList.add("active");
+        listBtn.classList.remove("active");
+        gridEl.style.display = "grid";
+        listEl.style.display = "none";
+      } else {
+        listBtn.classList.add("active");
+        gridBtn.classList.remove("active");
+        gridEl.style.display = "none";
+        listEl.style.display = "flex";
+      }
+    }
+
+    function getFilteredPlaces() {
+      return placesData.filter(p => {
+        const matchesCategory = currentCategoryFilter === "الكل" || p.category === currentCategoryFilter;
+        const searchBlob = `${p.name} ${p.category} ${p.description || ''} ${p.phone || ''}`.toLowerCase();
+        const matchesSearch = !currentSearchQuery || searchBlob.includes(currentSearchQuery);
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    function renderPlacesListAndGrid() {
+      const filtered = getFilteredPlaces();
+      const gridEl = document.getElementById("placesCardsGrid");
+      const listEl = document.getElementById("placesListView");
+      document.getElementById("visibleCountText").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        const emptyHtml = `
+          <div class="empty-directory-state">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+            <h3>لا توجد نتائج مطابقة لبحثك</h3>
+            <p style="color:var(--text-muted); font-size:14px;">جرب تغيير كلمة البحث أو اختيار تصنيف آخر لعرض الأماكن.</p>
+            <button class="btn-card primary" onclick="resetFilters()" style="margin-top:14px;">
+              إعادة ضبط البحث
+            </button>
+          </div>
+        `;
+        gridEl.innerHTML = emptyHtml;
+        listEl.innerHTML = emptyHtml;
+        return;
+      }
+
+      // Render Cards (Grid View)
+      gridEl.innerHTML = filtered.map(p => {
+        const coverImg = p.image1 || PRESET_IMAGES[p.img_key] || PRESET_IMAGES.admin;
+        const coords = p.coords || "35.43057,1.75495";
+        const mapUrl = p.search_query 
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.search_query)}`
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ' مهدية تيارت')}`;
+        const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(coords)}`;
+
+        return `
+          <article class="place-card" id="place-card-${p.id}">
+            <div class="card-cover" style="background-image: url('${coverImg}')">
+              <div class="card-category-badge">
+                <span>${p.icon || '📍'}</span>
+                <span>${p.category}</span>
+              </div>
+              <div class="card-badge-verified" title="موقع موثق في مهدية">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <div class="card-cover-title">
+                <h3>${p.name}</h3>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-meta-row">
+                <span class="card-coords"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${coords}</span>
+                ${p.phone ? `<span class="card-phone-badge"><i class="fa-solid fa-phone"></i> ${p.phone}</span>` : ''}
+              </div>
+
+              <p class="card-desc">${p.description || 'مرفق ومؤسسة خدمية لمدينة مهدية، ولاية تيارت.'}</p>
+
+              <div class="card-actions-grid">
+                <button class="btn-card outline" onclick="openPlaceDetails(${p.id})">
+                  <i class="fa-solid fa-circle-info"></i> التفاصيل
+                </button>
+                <a href="${mapUrl}" target="_blank" class="btn-card gold-soft">
+                  <i class="fa-solid fa-map-pin"></i> الخريطة
+                </a>
+                <a href="${dirUrl}" target="_blank" class="btn-card primary">
+                  <i class="fa-solid fa-diamond-turn-right"></i> الطريق
+                </a>
+              </div>
+
+              ${isAdminLoggedIn ? `
+                <div style="display:flex; gap:8px; margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);">
+                  <button class="btn-card outline" style="flex:1; padding:5px; font-size:11px;" onclick="openEditPlaceModal(${p.id})">
+                    <i class="fa-solid fa-pen-to-square"></i> تعديل
+                  </button>
+                  <button class="btn-card" style="flex:1; padding:5px; font-size:11px; background:#fee2e2; color:#ef4444; border:none;" onclick="deletePlaceAction(${p.id})">
+                    <i class="fa-solid fa-trash"></i> حذف
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      // Render List (List View)
+      listEl.innerHTML = filtered.map(p => {
+        const coords = p.coords || "35.43057,1.75495";
+        const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(coords)}`;
+
+        return `
+          <div class="place-list-item">
+            <div class="list-item-left">
+              <div class="list-item-icon">${p.icon || '🏛️'}</div>
+              <div class="list-item-info">
+                <h4>${p.name} <small style="font-size:12px; font-weight:600; color:var(--gold-dark); margin-right:6px;">(${p.category})</small></h4>
+                <p>${p.description || 'مرفق لمدينة مهدية'}</p>
+                <div style="display:flex; gap:14px; font-size:12px; margin-top:4px; color:var(--text-muted);">
+                  <span><i class="fa-solid fa-location-dot"></i> ${coords}</span>
+                  ${p.phone ? `<span><i class="fa-solid fa-phone"></i> ${p.phone}</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-card outline" onclick="openPlaceDetails(${p.id})">
+                <i class="fa-solid fa-info"></i>
+              </button>
+              <a href="${dirUrl}" target="_blank" class="btn-card primary">
+                <i class="fa-solid fa-route"></i> الطريق
+              </a>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function resetFilters() {
+      currentCategoryFilter = "الكل";
+      currentSearchQuery = "";
+      document.getElementById("directorySearchInput").value = "";
+      document.getElementById("heroSearchInput").value = "";
+      renderDirectory();
+    }
+
+    function updateDashboardCounts() {
+      const placesCountEl = document.getElementById("totalPlacesCount");
+      const catCountEl = document.getElementById("totalCategoriesCount");
+      if (placesCountEl) placesCountEl.textContent = placesData.length;
+      if (catCountEl) catCountEl.textContent = new Set(placesData.map(p => p.category)).size;
+    }
+
+    /**
+     * ==========================================================================
+     * 5. LEAFLET INTERACTIVE MAP
+     * ==========================================================================
+     */
+    function initLeafletMap() {
+      if (leafletMap) return;
+
+      const mapContainer = document.getElementById("mahdiaLeafletMap");
+      if (!mapContainer) return;
+
+      leafletMap = L.map('mahdiaLeafletMap', {
+        center: MAHDIA_CENTER_COORDS,
+        zoom: 14,
+        zoomControl: true
+      });
+
+      // OpenStreetMap Tiles with nice clean styling
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors | مهدية · الدليل الذهبي',
+        maxZoom: 19
+      }).addTo(leafletMap);
+
+      mapMarkersLayer = L.layerGroup().addTo(leafletMap);
+
+      // Add Mahdia Center Pulse Circle
+      L.circle(MAHDIA_CENTER_COORDS, {
+        color: '#d4af37',
+        fillColor: '#064e3b',
+        fillOpacity: 0.15,
+        radius: 1200
+      }).addTo(leafletMap);
+
+      updateMapMarkers();
+    }
+
+    function updateMapMarkers() {
+      if (!leafletMap || !mapMarkersLayer) return;
+      mapMarkersLayer.clearLayers();
+
+      const customHtmlIcon = (iconEmoji) => L.divIcon({
+        className: 'custom-leaflet-pin',
+        html: `
+          <div style="background:#064e3b; border:2px solid #d4af37; color:#fff; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
+            ${iconEmoji || '📍'}
+          </div>
+        `,
+        iconSize: [36, 36],
+        iconAnchor: [18, 18],
+        popupAnchor: [0, -18]
+      });
+
+      placesData.forEach(p => {
+        if (!p.coords) return;
+        const parts = p.coords.split(",").map(x => parseFloat(x.trim()));
+        if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+          const marker = L.marker([parts[0], parts[1]], { icon: customHtmlIcon(p.icon) });
+          const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${parts[0]},${parts[1]}`;
+          
+          marker.bindPopup(`
+            <div style="direction:rtl; text-align:right; font-family:Cairo,sans-serif; min-width:180px;">
+              <h4 style="font-weight:800; font-size:15px; color:#064e3b; margin-bottom:4px;">${p.icon || '📍'} ${p.name}</h4>
+              <div style="font-size:11px; color:#666; margin-bottom:8px;">التصنيف: <b>${p.category}</b></div>
+              <p style="font-size:12px; color:#333; line-height:1.4; margin-bottom:10px;">${p.description || ''}</p>
+              <div style="display:flex; gap:6px;">
+                <a href="${dirUrl}" target="_blank" style="background:#064e3b; color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; text-decoration:none; display:inline-block;">
+                  🚗 مسار الطريق
+                </a>
+                <button onclick="openPlaceDetails(${p.id})" style="background:#f3efe6; border:1px solid #ccc; padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer;">
+                  التفاصيل
+                </button>
+              </div>
+            </div>
+          `);
+          mapMarkersLayer.addLayer(marker);
+        }
+      });
+    }
+
+    function resetMapToMahdiaCenter() {
+      if (leafletMap) {
+        leafletMap.setView(MAHDIA_CENTER_COORDS, 14);
+        showToast("تم توسيط الخريطة على مهدية");
+      }
+    }
+
+    function locateUserAndShowDistance() {
+      if (!navigator.geolocation) {
+        showToast("متصفحك لا يدعم تحديد الموقع الجغرافي");
+        return;
+      }
+
+      showToast("جاري البحث عن موقعك الحالي عبر GPS...");
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const userLat = pos.coords.latitude;
+          const userLng = pos.coords.longitude;
+          const distKm = calculateDistanceKm(userLat, userLng, MAHDIA_CENTER_COORDS[0], MAHDIA_CENTER_COORDS[1]);
+
+          showToast(`موقعك يبعد حوالي ${distKm.toFixed(1)} كم عن مركز مهدية`);
+
+          if (leafletMap) {
+            leafletMap.setView([userLat, userLng], 13);
+            L.marker([userLat, userLng], {
+              icon: L.divIcon({
+                className: 'user-location-pin',
+                html: `<div style="background:#3b82f6; border:3px solid #fff; border-radius:50%; width:20px; height:20px; box-shadow:0 0 10px #3b82f6;"></div>`,
+                iconSize: [20, 20]
+              })
+            }).addTo(leafletMap).bindPopup("<b>موقعك الحالي</b>").openPopup();
+          }
+        },
+        (err) => {
+          showToast("تعذر تحديد موقعك بدقة، تأكد من تفعيل إذن الموقع.");
+        },
+        { timeout: 10000 }
+      );
+    }
+
+    function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; // Radius of Earth in km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    /**
+     * ==========================================================================
+     * 6. PRAYER TIMES ENGINE (ALGERIA / TIARET ZONE)
+     * ==========================================================================
+     */
+    const PRAYER_SCHEDULE_BASE = [
+      { id: "fajr", name: "الفجر", icon: "fa-moon", baseTime: "05:15" },
+      { id: "sunrise", name: "الشروق", icon: "fa-sun", baseTime: "06:40" },
+      { id: "dhuhr", name: "الظهر", icon: "fa-sun", baseTime: "12:55" },
+      { id: "asr", name: "العصر", icon: "fa-cloud-sun", baseTime: "16:25" },
+      { id: "maghrib", name: "المغرب", icon: "fa-cloud-meatball", baseTime: "19:10" },
+      { id: "isha", name: "العشاء", icon: "fa-moon", baseTime: "20:30" }
+    ];
+
+    let currentPrayerTimes = [...PRAYER_SCHEDULE_BASE];
+
+    async function initPrayerTimes() {
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
+
+      // Fetch accurate prayer times via AlAdhan API for Mahdia coordinates
+      try {
+        const today = new Date();
+        const res = await fetch(`https://api.aladhan.com/v1/timings/${Math.floor(today.getTime()/1000)}?latitude=${MAHDIA_CENTER_COORDS[0]}&longitude=${MAHDIA_CENTER_COORDS[1]}&method=3`);
+        const json = await res.json();
+        if (json && json.data && json.data.timings) {
+          const t = json.data.timings;
+          currentPrayerTimes = [
+            { id: "fajr", name: "الفجر", icon: "fa-moon", baseTime: t.Fajr },
+            { id: "sunrise", name: "الشروق", icon: "fa-sun", baseTime: t.Sunrise },
+            { id: "dhuhr", name: "الظهر", icon: "fa-sun", baseTime: t.Dhuhr },
+            { id: "asr", name: "العصر", icon: "fa-cloud-sun", baseTime: t.Asr },
+            { id: "maghrib", name: "المغرب", icon: "fa-cloud-meatball", baseTime: t.Maghrib },
+            { id: "isha", name: "العشاء", icon: "fa-moon", baseTime: t.Isha }
+          ];
+
+          // Hijri Date
+          if (json.data.date && json.data.date.hijri) {
+            const h = json.data.date.hijri;
+            document.getElementById("hijriGregorianDate").textContent = `${h.day} ${h.month.ar} ${h.year} هـ | ${today.toLocaleDateString('ar-DZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+          }
+        }
+      } catch (err) {
+        console.warn("AlAdhan API unavailable, using calibrated local times:", err);
+      }
+
+      renderPrayerGrid();
+    }
+
+    function updateLiveClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-GB', { hour12: false });
+      document.getElementById("liveClockDisplay").textContent = timeStr;
+
+      calculateNextPrayer(now);
+    }
+
+    function renderPrayerGrid() {
+      const container = document.getElementById("prayerGrid");
+      if (!container) return;
+
+      container.innerHTML = currentPrayerTimes.map(p => `
+        <div class="prayer-item" id="prayer-box-${p.id}">
+          <span class="prayer-badge">الصلاة القادمة</span>
+          <i class="fa-solid ${p.icon} prayer-icon"></i>
+          <span class="prayer-name">${p.name}</span>
+          <span class="prayer-time">${p.baseTime}</span>
+        </div>
+      `).join("");
+    }
+
+    function calculateNextPrayer(now) {
+      let nextP = null;
+      let minDiff = Infinity;
+      const currentMinutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+
+      // Reset all active classes
+      document.querySelectorAll(".prayer-item").forEach(el => el.classList.remove("active"));
+
+      for (let p of currentPrayerTimes) {
+        if (p.id === "sunrise") continue; // Sunrise is not a prayer
+        const parts = p.baseTime.split(":");
+        const pMinutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        const diff = pMinutes - currentMinutes;
+
+        if (diff > 0 && diff < minDiff) {
+          minDiff = diff;
+          nextP = { ...p, diffMinutes: diff };
+        }
+      }
+
+      // If no prayer left today, next is Fajr tomorrow
+      if (!nextP) {
+        const fajr = currentPrayerTimes[0];
+        const parts = fajr.baseTime.split(":");
+        const fajrMinutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        const diff = (24 * 60 - currentMinutes) + fajrMinutes;
+        nextP = { ...fajr, diffMinutes: diff };
+      }
+
+      const activeEl = document.getElementById(`prayer-box-${nextP.id}`);
+      if (activeEl) activeEl.classList.add("active");
+
+      document.getElementById("nextPrayerName").textContent = nextP.name;
+
+      const remHours = Math.floor(nextP.diffMinutes / 60);
+      const remMins = Math.floor(nextP.diffMinutes % 60);
+      const remSecs = Math.floor((nextP.diffMinutes * 60) % 60);
+      document.getElementById("nextPrayerRemaining").textContent = 
+        `${String(remHours).padStart(2, '0')}:${String(remMins).padStart(2, '0')}:${String(remSecs).padStart(2, '0')}`;
+    }
+
+    /**
+     * ==========================================================================
+     * 7. WEATHER INTEGRATION (Open-Meteo for Mahdia 35.43057, 1.75495)
+     * ==========================================================================
+     */
+    async function fetchMahdiaWeather() {
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${MAHDIA_CENTER_COORDS[0]}&longitude=${MAHDIA_CENTER_COORDS[1]}&current_weather=true`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.current_weather) {
+          const cw = data.current_weather;
+          document.getElementById("weatherTemp").innerHTML = `${Math.round(cw.temperature)} <small>°C</small>`;
+          document.getElementById("weatherWind").textContent = `الرياح: ${cw.windspeed} كم/سا`;
+
+          const code = cw.weathercode;
+          let desc = "أجواء صافية ومشمسة";
+          if (code >= 1 && code <= 3) desc = "غائم جزئياً";
+          else if (code >= 45 && code <= 48) desc = "ضباب محلي";
+          else if (code >= 51 && code <= 67) desc = "أمطار متفرقة";
+          else if (code >= 71) desc = "تساقط ثلوج / منخفض";
+          document.getElementById("weatherDesc").textContent = desc;
+        }
+      } catch (e) {
+        document.getElementById("weatherDesc").textContent = "طقس مهدية معتدل (الهضاب العليا)";
+      }
+    }
+
+    /**
+     * ==========================================================================
+     * 8. ADMIN DASHBOARD & CRUD LOGIC
+     * ==========================================================================
+     */
+    function handleAdminButtonClick() {
+      if (isAdminLoggedIn) {
+        // Toggle action or show add modal
+        openAddPlaceModal();
+      } else {
+        openModal("adminLoginModal");
+      }
+    }
+
+    function togglePasswordInput() {
+      const input = document.getElementById("adminPassInput");
+      const icon = document.getElementById("togglePassVisibility");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.className = "fa-solid fa-eye-slash";
+      } else {
+        input.type = "password";
+        icon.className = "fa-solid fa-eye";
+      }
+    }
+
+    function verifyAdminPassword(e) {
+      e.preventDefault();
+      const entered = document.getElementById("adminPassInput").value.trim();
+
+      if (entered === ADMIN_PASSWORD_HASH) {
+        isAdminLoggedIn = true;
+        sessionStorage.setItem("mahdia_admin_auth", "true");
+        closeModal("adminLoginModal");
+        updateAdminUI();
+        showToast("مرحباً بك! تم تسجيل الدخول إلى لوحة التحكم بنجاح.");
+      } else {
+        showToast("كلمة المرور غير صحيحة، حاول مجدداً.");
+      }
+    }
+
+    function adminLogout() {
+      isAdminLoggedIn = false;
+      sessionStorage.removeItem("mahdia_admin_auth");
+      updateAdminUI();
+      showToast("تم تسجيل الخروج من لوحة التحكم.");
+    }
+
+    function updateAdminUI() {
+      const banner = document.getElementById("adminActiveBar");
+      const quickAddBtn = document.getElementById("quickAddPlaceBtn");
+      const adminNavBtn = document.getElementById("adminNavBtn");
+
+      if (isAdminLoggedIn) {
+        banner.style.display = "block";
+        if (quickAddBtn) quickAddBtn.style.display = "inline-flex";
+        adminNavBtn.innerHTML = '<i class="fa-solid fa-shield"></i> لوحة الإدارة';
+        adminNavBtn.style.background = 'linear-gradient(135deg, #d4af37, #b8922a)';
+        adminNavBtn.style.color = '#1a1605';
+      } else {
+        banner.style.display = "none";
+        if (quickAddBtn) quickAddBtn.style.display = "none";
+        adminNavBtn.innerHTML = '<i class="fa-solid fa-lock"></i> لوحة التحكم';
+        adminNavBtn.style.background = '';
+        adminNavBtn.style.color = '';
+      }
+
+      renderPlacesListAndGrid();
+    }
+
+    function openAddPlaceModal() {
+      if (!isAdminLoggedIn) {
+        openModal("adminLoginModal");
+        return;
+      }
+
+      document.getElementById("placeModalTitle").innerHTML = '<i class="fa-solid fa-plus-circle"></i> إضافة مكان جديد';
+      document.getElementById("formPlaceId").value = "";
+      document.getElementById("formName").value = "";
+      document.getElementById("formCategory").value = "إدارة";
+      document.getElementById("formIcon").value = "🏛️";
+      document.getElementById("formPhone").value = "";
+      document.getElementById("formDescription").value = "";
+      document.getElementById("formCoords").value = "35.43057,1.75495";
+      document.getElementById("formSearchQuery").value = "";
+      document.getElementById("formImgKey").value = "admin";
+      document.getElementById("formImage1").value = "";
+      document.getElementById("formImage2").value = "";
+
+      openModal("placeFormModal");
+    }
+
+    function openEditPlaceModal(id) {
+      if (!isAdminLoggedIn) {
+        openModal("adminLoginModal");
+        return;
+      }
+
+      const p = placesData.find(x => x.id == id);
+      if (!p) return;
+
+      document.getElementById("placeModalTitle").innerHTML = '<i class="fa-solid fa-pen-to-square"></i> تعديل بيانات المكان';
+      document.getElementById("formPlaceId").value = p.id;
+      document.getElementById("formName").value = p.name || "";
+      document.getElementById("formCategory").value = p.category || "إدارة";
+      document.getElementById("formIcon").value = p.icon || "📍";
+      document.getElementById("formPhone").value = p.phone || "";
+      document.getElementById("formDescription").value = p.description || "";
+      document.getElementById("formCoords").value = p.coords || "35.43057,1.75495";
+      document.getElementById("formSearchQuery").value = p.search_query || "";
+      document.getElementById("formImgKey").value = p.img_key || "admin";
+      document.getElementById("formImage1").value = p.image1 || "";
+      document.getElementById("formImage2").value = p.image2 || "";
+
+      openModal("placeFormModal");
+    }
+
+    function handleCategoryChange() {
+      const cat = document.getElementById("formCategory").value;
+      const iconInput = document.getElementById("formIcon");
+      const imgKey = document.getElementById("formImgKey");
+
+      const iconMap = {
+        "إدارة": "🏛️",
+        "أمن": "👮",
+        "صحة": "🏥",
+        "صيدليات": "💊",
+        "مساجد": "🕌",
+        "تعليم ابتدائي": "🏫",
+        "تعليم متوسط": "🎓",
+        "تعليم ثانوي": "🎓",
+        "بنوك": "🏦",
+        "بريد": "📮",
+        "مطاعم": "🍽️",
+        "مقاهي": "☕",
+        "تجارة": "🛒",
+        "أخرى": "📍"
+      };
+
+      const keyMap = {
+        "إدارة": "admin",
+        "أمن": "admin",
+        "صحة": "health",
+        "صيدليات": "pharmacy",
+        "مساجد": "mosque",
+        "تعليم ابتدائي": "school",
+        "تعليم متوسط": "school",
+        "تعليم ثانوي": "school",
+        "بنوك": "bank",
+        "بريد": "admin",
+        "مطاعم": "restaurant",
+        "مقاهي": "cafe"
+      };
+
+      if (iconMap[cat]) iconInput.value = iconMap[cat];
+      if (keyMap[cat]) imgKey.value = keyMap[cat];
+    }
+
+    function setCoordsToMahdiaCenter() {
+      document.getElementById("formCoords").value = "35.43057,1.75495";
+      showToast("تم تعيين إحداثيات مهدية");
+    }
+
+    async function savePlaceForm(e) {
+      e.preventDefault();
+      const placeId = document.getElementById("formPlaceId").value;
+      const name = document.getElementById("formName").value.trim();
+      const category = document.getElementById("formCategory").value;
+      const icon = document.getElementById("formIcon").value.trim() || "📍";
+      const phone = document.getElementById("formPhone").value.trim();
+      const description = document.getElementById("formDescription").value.trim();
+      const coords = document.getElementById("formCoords").value.trim() || "35.43057,1.75495";
+      const searchQuery = document.getElementById("formSearchQuery").value.trim() || `${name} مهدية تيارت`;
+      const imgKey = document.getElementById("formImgKey").value;
+      const image1 = document.getElementById("formImage1").value.trim();
+      const image2 = document.getElementById("formImage2").value.trim();
+
+      const newObj = {
+        name,
+        category,
+        icon,
+        phone,
+        description,
+        coords,
+        search_query: searchQuery,
+        img_key: imgKey,
+        image1,
+        image2,
+        updated_at: new Date().toISOString()
+      };
+
+      // 1. If Supabase is online, execute on Supabase
+      if (isSupabaseOnline && supabaseClient) {
+        try {
+          if (placeId) {
+            // Update
+            const { error } = await supabaseClient
+              .from("places")
+              .update(newObj)
+              .eq("id", placeId);
+            if (error) throw error;
+          } else {
+            // Insert
+            const { error } = await supabaseClient
+              .from("places")
+              .insert([newObj]);
+            if (error) throw error;
+          }
+
+          showToast("تم حفظ البيانات بنجاح في قاعدة Supabase!");
+          closeModal("placeFormModal");
+          await loadPlacesData();
+          return;
+        } catch (err) {
+          console.error("Supabase write failed, falling back to local:", err);
+          showToast("تعذر الحفظ في Supabase، تم الحفظ محلياً: " + err.message);
+        }
+      }
+
+      // 2. Local Fallback save
+      let updatedList = [...placesData];
+      if (placeId) {
+        const idx = updatedList.findIndex(x => x.id == placeId);
+        if (idx !== -1) {
+          updatedList[idx] = { ...updatedList[idx], ...newObj };
+        }
+      } else {
+        const nextId = placesData.length ? Math.max(...placesData.map(p => p.id || 0)) + 1 : 1;
+        updatedList.unshift({ id: nextId, created_at: new Date().toISOString(), ...newObj });
+      }
+
+      savePlacesLocally(updatedList);
+      closeModal("placeFormModal");
+      showToast("تم حفظ المكان بنجاح!");
+    }
+
+    async function deletePlaceAction(id) {
+      if (!confirm("هل أنت متأكد من رغبتك في حذف هذا المكان نهائياً؟")) return;
+
+      if (isSupabaseOnline && supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from("places").delete().eq("id", id);
+          if (error) throw error;
+          showToast("تم حذف المكان من قاعدة Supabase.");
+          await loadPlacesData();
+          return;
+        } catch (err) {
+          console.error("Supabase delete failed:", err);
+          showToast("خطأ في حذف المكان من Supabase، سيتم الحذف محلياً.");
+        }
+      }
+
+      const updated = placesData.filter(x => x.id != id);
+      savePlacesLocally(updated);
+      showToast("تم حذف المكان.");
+    }
+
+    /**
+     * ==========================================================================
+     * 9. DETAILS MODAL & LIGHTBOX
+     * ==========================================================================
+     */
+    function openPlaceDetails(id) {
+      const p = placesData.find(x => x.id == id);
+      if (!p) return;
+
+      const coverImg = p.image1 || PRESET_IMAGES[p.img_key] || PRESET_IMAGES.admin;
+      const coords = p.coords || "35.43057,1.75495";
+      const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.search_query || p.name + ' مهدية تيارت')}`;
+      const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(coords)}`;
+
+      document.getElementById("detailModalTitle").innerHTML = `${p.icon || '📍'} ${p.name}`;
+      document.getElementById("detailModalBody").innerHTML = `
+        <div class="details-cover" style="background-image:url('${coverImg}')">
+          <div class="card-category-badge">
+            <span>${p.icon || '📍'}</span>
+            <span>${p.category}</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <h3 style="font-size:22px; font-weight:800; color:var(--primary); margin-bottom:6px;">${p.name}</h3>
+          <div style="font-size:13px; color:var(--text-muted); display:flex; gap:16px; flex-wrap:wrap;">
+            <span><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> إحداثيات: <b dir="ltr">${coords}</b></span>
+            ${p.phone ? `<span><i class="fa-solid fa-phone" style="color:var(--gold)"></i> الهاتف: <a href="tel:${p.phone}" dir="ltr" style="font-weight:700; color:var(--primary);">${p.phone}</a></span>` : ''}
+          </div>
+        </div>
+
+        <div style="background:var(--bg); padding:16px; border-radius:14px; border:1px solid var(--line); margin-bottom:20px;">
+          <h4 style="font-size:14px; font-weight:800; margin-bottom:6px; color:var(--text);">عن المكان والخدمات:</h4>
+          <p style="font-size:14px; line-height:1.7; color:var(--text-muted);">${p.description || 'مرفق لخدمة المواطنين والزوار في مدينة مهدية بولاية تيارت.'}</p>
+        </div>
+
+        ${(p.image1 || p.image2) ? `
+          <div style="margin-bottom:20px;">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:8px;">معرض الصور:</h4>
+            <div class="details-gallery-thumbs">
+              ${p.image1 ? `<img src="${p.image1}" class="details-gallery-thumb" onclick="openLightbox('${p.image1}', '${p.name}')">` : ''}
+              ${p.image2 ? `<img src="${p.image2}" class="details-gallery-thumb" onclick="openLightbox('${p.image2}', '${p.name}')">` : ''}
+            </div>
+          </div>
+        ` : ''}
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <a href="${dirUrl}" target="_blank" class="btn-card primary" style="padding:12px;">
+            <i class="fa-solid fa-diamond-turn-right"></i> فتح مسار الطريق GPS
+          </a>
+          <a href="${mapUrl}" target="_blank" class="btn-card gold-soft" style="padding:12px;">
+            <i class="fa-solid fa-map-location-dot"></i> عرض على خرائط Google
+          </a>
+        </div>
+      `;
+
+      openModal("placeDetailsModal");
+    }
+
+    function openLightbox(imgUrl, caption) {
+      document.getElementById("lightboxImage").src = imgUrl;
+      document.getElementById("lightboxCaption").textContent = caption || "";
+      openModal("lightboxModal");
+    }
+
+    /**
+     * ==========================================================================
+     * 10. SUPABASE SETTINGS MODAL & KEYS MANAGEMENT
+     * ==========================================================================
+     */
+    function openSettingsModal() {
+      document.getElementById("settingsSupabaseUrl").value = supabaseUrl;
+      document.getElementById("settingsSupabaseKey").value = supabaseKey;
+      testSupabaseConnectionUI();
+      openModal("settingsModal");
+    }
+
+    async function testSupabaseConnectionUI() {
+      const detailsEl = document.getElementById("settingsStatusDetails");
+      detailsEl.textContent = "جاري اختبار الاتصال بقاعدة بيانات Supabase...";
+
+      const isConnected = await testSupabaseConnectivity();
+      if (isConnected) {
+        detailsEl.innerHTML = `
+          <div style="color:#10b981; font-weight:700;">
+            <i class="fa-solid fa-circle-check"></i> الاتصال سليم ونشط بقاعدة بيانات Supabase!
+          </div>
+          <div style="margin-top:4px;">المشروع متصل وجدول places جاهز للاستعلام والإضافة.</div>
+        `;
+      } else {
+        detailsEl.innerHTML = `
+          <div style="color:#f59e0b; font-weight:700;">
+            <i class="fa-solid fa-triangle-exclamation"></i> الموقع يعمل حالياً بنظام التخزين المحلي الاحتياطي.
+          </div>
+          <div style="margin-top:4px;">
+            إذا كان المفتاح المعطى يحتوي على (...) أو غير مكتمل، يرجى نسخه بالكامل من لوحة تحكم Supabase ولصقه في الحقل أعلاه والضغط على "حفظ".
+          </div>
+        `;
+      }
+    }
+
+    async function saveSupabaseSettings() {
+      const newUrl = document.getElementById("settingsSupabaseUrl").value.trim();
+      const newKey = document.getElementById("settingsSupabaseKey").value.trim();
+
+      if (!newUrl || !newKey) {
+        showToast("يرجى ملء رابط Supabase والمفتاح.");
+        return;
+      }
+
+      supabaseUrl = newUrl;
+      supabaseKey = newKey;
+      localStorage.setItem("mahdia_sp_url", newUrl);
+      localStorage.setItem("mahdia_sp_key", newKey);
+
+      initSupabaseClient();
+      showToast("تم حفظ الإعدادات، جاري إعادة الفحص...");
+
+      await testSupabaseConnectionUI();
+      await loadPlacesData();
+    }
+
+    /**
+     * ==========================================================================
+     * 11. GENERAL UTILITIES (Modal, Toast, Dark Mode, Share)
+     * ==========================================================================
+     */
+    function openModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.add("show");
+    }
+
+    function closeModal(id) {
+      const m = document.getElementById(id);
+      if (m) m.classList.remove("show");
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById("toastNotification");
+      const msgEl = document.getElementById("toastMessage");
+      if (!box || !msgEl) return;
+
+      msgEl.textContent = msg;
+      box.classList.add("show");
+      setTimeout(() => box.classList.remove("show"), 3500);
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("mahdia_theme_dark", isDark ? "true" : "false");
+
+      const icon = document.querySelector("#themeToggleBtn i");
+      if (icon) {
+        icon.className = isDark ? "fa-solid fa-sun" : "fa-solid fa-moon";
+      }
+    }
+
+    // Load saved theme
+    if (localStorage.getItem("mahdia_theme_dark") === "true") {
+      document.body.classList.add("dark");
+      const icon = document.querySelector("#themeToggleBtn i");
+      if (icon) icon.className = "fa-solid fa-sun";
+    }
+
+    function toggleMobileMenu() {
+      const d = document.getElementById("mobileDrawer");
+      if (d) d.classList.toggle("open");
+    }
+
+    function copyMahdiaCoordinates() {
+      navigator.clipboard?.writeText("35.43057, 1.75495");
+      showToast("تم نسخ إحداثيات مهدية (35.43057, 1.75495)");
+    }
+
+    function shareWebsite() {
+      if (navigator.share) {
+        navigator.share({
+          title: "مهدية · الدليل الذهبي (ولاية تيارت)",
+          text: "دليل شامل ومتكامل لكافة المرافق والخدمات والأماكن في مدينة مهدية.",
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        navigator.clipboard?.writeText(window.location.href);
+        showToast("تم نسخ رابط الموقع إلى الحافظة!");
+      }
+    }
+  </script>
+</body>
+</html>
