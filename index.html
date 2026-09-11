@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#dc2626">
+<title>مهدية · الدليل الذكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --red:#dc2626;
+  --red-dark:#b91c1c;
+  --red-light:#ef4444;
+  --gold:#c9a961;
+  --gold-light:#e0c989;
+  --white:#ffffff;
+  --bg:#ffffff;
+  --bg-soft:#fafafa;
+  --card:#ffffff;
+  --text:#18181b;
+  --muted:#71717a;
+  --line:#e5e7eb;
+  --sh:0 2px 12px rgba(24,24,27,.05);
+  --sh-lg:0 12px 40px rgba(24,24,27,.08);
+  --sh-xl:0 20px 60px rgba(220,38,38,.15);
+  --grad-red:linear-gradient(135deg,#dc2626 0%,#b91c1c 100%);
+  --grad-gold:linear-gradient(135deg,#c9a961 0%,#e0c989 100%);
+  --r:20px;
+  --tr:.3s cubic-bezier(.4,0,.2,1);
+}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding-bottom:80px;overflow-x:hidden}
+body.dark{--bg:#0a0a0a;--bg-soft:#111;--card:#18181b;--text:#f4f4f5;--muted:#a1a1aa;--line:#27272a;--sh:0 2px 12px rgba(0,0,0,.4);--sh-lg:0 12px 40px rgba(0,0,0,.5);--sh-xl:0 20px 60px rgba(220,38,38,.25)}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:10px}
+
+/* TOP BAR */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+body.dark .topbar{background:rgba(10,10,10,.92)}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-mark{width:42px;height:42px;background:var(--grad-red);border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;box-shadow:0 6px 18px rgba(220,38,38,.3)}
+.brand-text strong{display:block;font-size:17px;font-weight:900;line-height:1.1}
+.brand-text small{display:block;font-size:10.5px;color:var(--gold);font-weight:700;letter-spacing:.5px}
+.top-actions{display:flex;gap:8px}
+.ic-btn{width:42px;height:42px;border-radius:13px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;font-size:15px;transition:var(--tr);border:1px solid var(--line)}
+.ic-btn:active{transform:scale(.92);background:var(--line)}
+
+/* HERO */
+.hero{background:var(--grad-red);color:#fff;padding:45px 24px 75px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60%;right:-30%;width:90%;height:220%;background:radial-gradient(circle,rgba(201,169,97,.25),transparent 60%);border-radius:50%}
+.hero::after{content:'';position:absolute;bottom:-40%;left:-20%;width:70%;height:150%;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);border-radius:50%}
+.hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,97,.2);border:1px solid rgba(201,169,97,.4);padding:8px 16px;border-radius:30px;font-size:11.5px;font-weight:700;margin-bottom:20px;color:var(--gold-light)}
+.hero-tag .dot{width:7px;height:7px;background:var(--gold);border-radius:50%;box-shadow:0 0 12px var(--gold);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.hero h1{font-size:38px;font-weight:900;line-height:1.12;margin-bottom:14px;letter-spacing:-1px}
+.hero h1 span{color:var(--gold);display:block;margin-top:4px}
+.hero p{font-size:15px;opacity:.92;max-width:520px;margin-bottom:26px;line-height:1.7}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:14px 24px;border-radius:15px;font-size:14px;font-weight:800;display:inline-flex;align-items:center;gap:9px;transition:var(--tr);cursor:pointer;border:1px solid transparent}
+.btn:active{transform:scale(.96)}
+.btn-white{background:#fff;color:var(--red)}
+.btn-gold{background:var(--grad-gold);color:#422006;box-shadow:0 8px 25px rgba(201,169,97,.4)}
+.btn-ghost{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff;backdrop-filter:blur(10px)}
+
+/* SEARCH */
+.search-wrapper{max-width:900px;margin:-40px auto 0;padding:0 24px;position:relative;z-index:5}
+.search-box{background:var(--card);border-radius:20px;box-shadow:var(--sh-xl);display:flex;align-items:center;padding:7px 7px 7px 20px;gap:12px;border:1px solid var(--line)}
+.search-box > i{color:var(--muted);font-size:17px}
+.search-box input{flex:1;border:none;outline:none;background:none;padding:15px 0;font-family:inherit;font-size:15px;color:var(--text)}
+.search-box input::placeholder{color:var(--muted);opacity:.6}
+.search-clear{width:46px;height:46px;background:var(--grad-red);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;transition:var(--tr)}
+.search-clear:active{transform:scale(.9)}
+
+/* SECTIONS */
+.section{padding:50px 24px 0;max-width:1200px;margin:0 auto}
+.sec-header{margin-bottom:24px;text-align:center}
+.sec-header h2{font-size:26px;font-weight:900;display:inline-flex;align-items:center;gap:10px;margin-bottom:6px}
+.sec-header h2 i{color:var(--red);font-size:22px}
+.sec-header p{color:var(--muted);font-size:13.5px;font-weight:500}
+
+/* TIMELINE */
+.timeline{position:relative;padding-right:26px;max-width:600px;margin:0 auto}
+.timeline::before{content:'';position:absolute;right:5px;top:12px;bottom:12px;width:2px;background:linear-gradient(to bottom,var(--red),transparent);border-radius:2px}
+.tl-item{position:relative;margin-bottom:22px;opacity:0;transform:translateY(20px);animation:fadeUp .5s ease forwards}
+.tl-item:nth-child(1){animation-delay:.1s}
+.tl-item:nth-child(2){animation-delay:.2s}
+.tl-item:nth-child(3){animation-delay:.3s}
+.tl-item:nth-child(4){animation-delay:.4s}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+.tl-item::before{content:'';position:absolute;right:-24px;top:22px;width:14px;height:14px;background:var(--card);border:3px solid var(--red);border-radius:50%;box-shadow:0 0 0 4px var(--bg);z-index:1;transition:var(--tr)}
+.tl-item.active::before{background:var(--red);box-shadow:0 0 0 4px var(--bg),0 0 15px var(--red)}
+.tl-card{background:var(--card);border-radius:18px;padding:20px;border:1px solid var(--line);transition:var(--tr);box-shadow:var(--sh)}
+.tl-card:active{transform:scale(.98);box-shadow:var(--sh-lg);border-color:var(--gold)}
+.tl-year{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--red);background:rgba(220,38,38,.06);padding:5px 14px;border-radius:20px;margin-bottom:10px;border:1px solid rgba(220,38,38,.12)}
+.tl-card h3{font-size:16.5px;font-weight:800;margin-bottom:8px}
+.tl-card p{font-size:13.5px;color:var(--muted);line-height:1.75}
+.tl-card strong{color:var(--red);font-weight:800}
+
+/* GALLERY */
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;max-width:800px;margin:0 auto}
+.gal-item{aspect-ratio:1;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:var(--tr);position:relative}
+.gal-item:active{transform:scale(.97)}
+.gal-item img{width:100%;height:100%;object-fit:cover;transition:var(--tr)}
+.gal-item:hover img{transform:scale(1.05)}
+.gal-item:nth-child(1){grid-column:span 2;aspect-ratio:2/1}
+.gal-item:nth-child(4){grid-column:span 2;aspect-ratio:2/1}
+
+/* CATEGORIES */
+.cats-scroll{display:flex;gap:9px;overflow-x:auto;padding:6px 24px 14px;scrollbar-width:none;margin:0 -24px}
+.cats-scroll::-webkit-scrollbar{display:none}
+.cat-pill{flex-shrink:0;padding:11px 20px;background:var(--card);border:1.5px solid var(--line);border-radius:30px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:9px;transition:var(--tr);white-space:nowrap;color:var(--text);box-shadow:var(--sh)}
+.cat-pill:active{transform:scale(.95)}
+.cat-pill.active{background:var(--red);color:#fff;border-color:var(--red);box-shadow:0 10px 25px rgba(220,38,38,.35);transform:scale(1.05)}
+.cat-pill i{font-size:14px}
+.cat-pill .cnt{background:rgba(0,0,0,.06);padding:1px 8px;border-radius:20px;font-size:11px;font-weight:800;min-width:22px;text-align:center}
+.cat-pill.active .cnt{background:var(--gold);color:#422006}
+
+/* PLACES */
+.places-grid{display:grid;gap:14px}
+.card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh);display:flex;transition:var(--tr);animation:cardIn .4s ease both}
+.card:active{transform:scale(.98);box-shadow:var(--sh-lg);border-color:var(--red)}
+@keyframes cardIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.card-img{width:120px;min-height:130px;flex-shrink:0;background-size:cover;background-position:center;position:relative}
+.card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.3),transparent 60%)}
+.card-icon{position:absolute;top:10px;right:10px;width:38px;height:38px;background:rgba(255,255,255,.98);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 6px 16px rgba(0,0,0,.15);z-index:1}
+.card-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.card-body h3{font-size:15.5px;font-weight:800;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cat-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--red);background:rgba(220,38,38,.06);padding:4px 11px;border-radius:20px;margin-bottom:8px;width:fit-content;border:1px solid rgba(220,38,38,.1)}
+.card-desc{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;margin-bottom:10px}
+.card-btns{display:flex;gap:6px}
+.mini-btn{flex:1;padding:9px;border-radius:12px;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;transition:var(--tr);cursor:pointer;border:1px solid transparent}
+.mini-btn:active{transform:scale(.94)}
+.mini-btn.primary{background:var(--red);color:#fff}
+.mini-btn.success{background:#16a34a;color:#fff}
+.mini-btn.outline{background:transparent;color:var(--text);border-color:var(--line)}
+
+/* PRAYER */
+.prayer-card{background:#18181b;border-radius:24px;padding:24px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh-xl)}
+.prayer-card::before{content:'';position:absolute;top:-60px;left:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(220,38,38,.4),transparent 70%);border-radius:50%}
+.prayer-card::after{content:'';position:absolute;bottom:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(201,169,97,.25),transparent 70%);border-radius:50%}
+.prayer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative;z-index:1;flex-wrap:wrap;gap:10px}
+.prayer-head h3{font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
+.prayer-head h3 i{color:var(--gold)}
+.prayer-head .date{font-size:11px;background:rgba(255,255,255,.1);padding:6px 13px;border-radius:20px;font-weight:700;color:var(--gold-light)}
+.p-list{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;position:relative;z-index:1}
+.p-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 4px;text-align:center;transition:var(--tr)}
+.p-item.active{background:var(--grad-gold);color:#422006;transform:scale(1.08);box-shadow:0 12px 30px rgba(201,169,97,.45);border-color:transparent}
+.p-item .lbl{font-size:9.5px;display:block;margin-bottom:4px;opacity:.85;font-weight:600}
+.p-item .tm{font-size:13px;font-weight:800;display:block;font-family:'Cairo',sans-serif}
+.p-foot{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:13px;position:relative;z-index:1;flex-wrap:wrap;gap:10px}
+.p-foot strong{color:var(--gold-light);font-weight:800}
+.p-foot .timer{font-weight:800;color:#422006;direction:ltr;font-size:15px;background:var(--grad-gold);padding:7px 18px;border-radius:20px;letter-spacing:1px}
+
+/* MAP */
+.map-container{border-radius:var(--r);overflow:hidden;box-shadow:var(--sh-lg);border:1px solid var(--line);background:var(--card);max-width:1000px;margin:0 auto}
+.map-container iframe{width:100%;height:300px;border:0;display:block}
+.map-actions{padding:14px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* FOOTER */
+.footer{background:#18181b;color:#fff;padding:40px 24px 110px;text-align:center;margin-top:50px;position:relative;overflow:hidden}
+.footer::before{content:'';position:absolute;top:0;right:0;width:400px;height:400px;background:radial-gradient(circle,rgba(220,38,38,.2),transparent 70%);border-radius:50%}
+.footer-inner{max-width:500px;margin:0 auto;position:relative;z-index:1}
+.footer-logo{width:60px;height:60px;background:var(--grad-gold);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#422006;box-shadow:0 15px 40px rgba(201,169,97,.4)}
+.footer h3{font-size:18px;font-weight:900;margin-bottom:8px}
+.footer p{font-size:12.5px;opacity:.7;margin-bottom:22px;line-height:1.7}
+.socials{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.socials a{width:44px;height:44px;background:rgba(255,255,255,.08);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;transition:var(--tr);border:1px solid rgba(255,255,255,.1)}
+.socials a:active{transform:scale(.9);background:var(--red);border-color:var(--red)}
+.socials a.ig{background:linear-gradient(135deg,#E4405F,#C13584);border-color:transparent}
+.copy{font-size:11px;opacity:.5;margin-top:16px}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(24px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100}
+body.dark .bottom-nav{background:rgba(10,10,10,.95)}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;font-size:10px;font-weight:700;color:var(--muted);transition:var(--tr);position:relative}
+.nav-item i{font-size:20px;transition:var(--tr)}
+.nav-item.active{color:var(--red)}
+.nav-item.active i{transform:scale(1.15)}
+.nav-item.active::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:32px;height:3px;background:var(--grad-gold);border-radius:0 0 4px 4px}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(24,24,27,.75);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex;animation:fade .3s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.modal-content{background:var(--card);border-radius:26px 26px 0 0;width:100%;max-width:650px;max-height:92vh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom);animation:slideUp .4s cubic-bezier(.4,0,.2,1)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-bar{width:44px;height:4px;background:var(--line);border-radius:4px;margin:12px auto 8px}
+.modal-header{padding:8px 24px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:20px;font-weight:900}
+.modal-close{width:38px;height:38px;border-radius:50%;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted)}
+.modal-body{padding:20px 24px}
+.gallery-modal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.gallery-modal img{width:100%;border-radius:16px;aspect-ratio:1;object-fit:cover;border:1px solid var(--line)}
+.info-row{display:flex;gap:12px;padding:13px;background:var(--bg-soft);border-radius:14px;margin-bottom:8px;font-size:13px;align-items:flex-start;border:1px solid var(--line)}
+.info-row i{color:var(--red);font-size:16px;margin-top:2px;flex-shrink:0}
+.info-row b{color:var(--red);font-weight:800}
+.info-row a{color:var(--red);font-weight:800;direction:ltr;display:inline-block}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.modal-btns .mini-btn{padding:13px;font-size:12.5px}
+
+/* EMPTY */
+.empty{text-align:center;padding:70px 20px;color:var(--muted);grid-column:1/-1}
+.empty i{font-size:56px;color:var(--line);margin-bottom:16px}
+.empty p{font-size:15px;font-weight:700;margin-bottom:4px}
+.empty .sub{font-size:12.5px;font-weight:500;opacity:.7}
+
+/* SKELETON */
+.sk{background:linear-gradient(90deg,var(--line) 25%,var(--bg-soft) 50%,var(--line) 75%);background-size:200% 100%;animation:sk 1.5s infinite;border-radius:12px}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-card{display:flex;background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.sk-img{width:120px;height:130px;flex-shrink:0}
+.sk-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:9px}
+.sk-line{height:12px;border-radius:6px}
+.sk-line.s{width:60%}
+.sk-line.m{width:80%}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(200px);background:#18181b;color:#fff;padding:13px 26px;border-radius:30px;font-size:13px;font-weight:700;z-index:300;transition:.4s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 50px rgba(0,0,0,.3);max-width:90%;text-align:center;border:1px solid rgba(201,169,97,.2)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--red);border-color:var(--red)}
+.toast.success{background:#16a34a;border-color:#16a34a}
+
+/* SPLASH */
+.splash{position:fixed;inset:0;background:var(--grad-red);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s,visibility .5s}
+.splash.hide{opacity:0;visibility:hidden}
+.splash-mark{width:90px;height:90px;background:var(--grad-gold);border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:44px;color:#422006;margin-bottom:20px;animation:pulse 1.5s ease infinite;box-shadow:0 20px 50px rgba(201,169,97,.5)}
+.splash h1{color:#fff;font-size:30px;font-weight:900;margin-bottom:6px}
+.splash p{color:var(--gold-light);font-size:13.5px;font-weight:600}
+
+/* RESPONSIVE */
+@media(min-width:640px){
+  .places-grid{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:52px}
+  .gallery{grid-template-columns:repeat(4,1fr)}
+  .gal-item:nth-child(1),.gal-item:nth-child(4){grid-column:span 1;aspect-ratio:1}
+  .sec-header h2{font-size:32px}
+}
+@media(min-width:1024px){
+  .places-grid{grid-template-columns:repeat(3,1fr)}
+  .bottom-nav{display:none}
+  body{padding-bottom:40px}
+  .footer{padding-bottom:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-mark"><i class="fa-solid fa-location-dot"></i></div>
+  <h1>مهدية</h1>
+  <p>الدليل الذكي</p>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark"><i class="fa-solid fa-location-dot"></i></div>
+    <div class="brand-text">
+      <strong>مهدية</strong>
+      <small>الدليل الذكي</small>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="ic-btn" onclick="toggleDark()" id="darkBtn"><i class="fa-regular fa-moon"></i></button>
+    <button class="ic-btn" onclick="locateMe()"><i class="fa-solid fa-location-crosshairs"></i></button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag"><span class="dot"></span> مهدية · ولاية تيارت · الجزائر</span>
+    <h1>اكتشف مهدية<span>في مكان واحد</span></h1>
+    <p>دليلك الذكي لأماكن وخدمات مدينة مهدية — تاريخ عريق وخدمات عصرية بين يديك</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#places"><i class="fa-solid fa-compass"></i> استكشف</a>
+      <button class="btn btn-white" onclick="locateMe()"><i class="fa-solid fa-location-crosshairs"></i> موقعي</button>
+      <button class="btn btn-ghost" onclick="shareSite()"><i class="fa-solid fa-share-nodes"></i> مشاركة</button>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-wrapper">
+  <div class="search-box">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="search" placeholder="ابحث عن مكان، خدمة، مطعم...">
+    <button class="search-clear" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<section class="section" id="history">
+  <div class="sec-header">
+    <h2><i class="fa-regular fa-clock"></i> تاريخ مهدية</h2>
+    <p>مدينة بوردو سابقاً — ذاكرة تمتد لأكثر من قرن</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-card">
+        <span class="tl-year"><i class="fa-regular fa-calendar"></i> 1904 - 1905</span>
+        <h3>بداية تشكل المدينة الحديثة</h3>
+        <p>تأسست مدينة مهدية في بداية القرن العشرين، وكانت تعرف باسم <strong>بوردو (Burdeau)</strong> خلال فترة الاستعمار الفرنسي.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-card">
+        <span class="tl-year"><i class="fa-regular fa-calendar"></i> 1924</span>
+        <h3>مهدية تصبح بلدية</h3>
+        <p>في 15 سبتمبر 1924، صدر مرسوم يقضي بترقية مهدية إلى بلدية كاملة الصلاحية.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-card">
+        <span class="tl-year"><i class="fa-regular fa-calendar"></i> 1962</span>
+        <h3>الاستقلال والتحول</h3>
+        <p>بعد استقلال الجزائر، تغير اسم المدينة من "بوردو" إلى <strong>مهدية</strong>، وبدأت مرحلة جديدة من التطور.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-card">
+        <span class="tl-year"><i class="fa-solid fa-star"></i> اليوم</span>
+        <h3>مهدية · مدينة متطورة</h3>
+        <p>مدينة حيوية يقطنها أكثر من 33 ألف نسمة، تضم مستشفى، ثانويات، مراكز تكوين، مساجد، وأسواق.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY (يتم تحميلها من لوحة التحكم) -->
+<section class="section" id="gallery">
+  <div class="sec-header">
+    <h2><i class="fa-regular fa-images"></i> من مهدية</h2>
+    <p>لمحات من جمال المدينة</p>
+  </div>
+  <div class="gallery" id="galleryGrid">
+    <div class="gal-item sk"></div>
+    <div class="gal-item sk"></div>
+    <div class="gal-item sk"></div>
+    <div class="gal-item sk"></div>
+  </div>
+</section>
+
+<!-- PLACES -->
+<section class="section" id="places">
+  <div class="sec-header">
+    <h2><i class="fa-solid fa-compass"></i> دليل الأماكن</h2>
+    <p>تصفّح حسب التصنيف أو ابحث بالاسم</p>
+  </div>
+  <div class="cats-scroll" id="cats"></div>
+  <div class="places-grid" id="grid"></div>
+</section>
+
+<!-- PRAYER -->
+<section class="section">
+  <div class="prayer-card">
+    <div class="prayer-head">
+      <h3><i class="fa-solid fa-mosque"></i> مواقيت الصلاة · مهدية</h3>
+      <span class="date" id="pDate">--</span>
+    </div>
+    <div class="p-list" id="pList">
+      <div class="p-item"><span class="lbl">الفجر</span><span class="tm">--</span></div>
+      <div class="p-item"><span class="lbl">الشروق</span><span class="tm">--</span></div>
+      <div class="p-item"><span class="lbl">الظهر</span><span class="tm">--</span></div>
+      <div class="p-item"><span class="lbl">العصر</span><span class="tm">--</span></div>
+      <div class="p-item"><span class="lbl">المغرب</span><span class="tm">--</span></div>
+      <div class="p-item"><span class="lbl">العشاء</span><span class="tm">--</span></div>
+    </div>
+    <div class="p-foot">
+      <span>القادمة: <strong id="pNext">--</strong></span>
+      <span class="timer" id="pTimer">--:--</span>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="section">
+  <div class="sec-header">
+    <h2><i class="fa-regular fa-map"></i> خريطة مهدية</h2>
+    <p>افتح أي مكان من موقعك الحالي</p>
+  </div>
+  <div class="map-container">
+    <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=1.735%2C35.405%2C1.785%2C35.455&layer=mapnik" loading="lazy"></iframe>
+    <div class="map-actions">
+      <button class="mini-btn primary" onclick="locateMe()"><i class="fa-solid fa-location-crosshairs"></i> موقعي</button>
+      <a class="mini-btn outline" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Mahdia,Tiaret,Algeria"><i class="fa-brands fa-google"></i> Google</a>
+      <button class="mini-btn outline" onclick="copyGPS()"><i class="fa-solid fa-copy"></i> نسخ GPS</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo"><i class="fa-solid fa-location-dot"></i></div>
+    <h3>مهدية · الدليل الذكي</h3>
+    <p>دليل محلي مجاني لخدمة سكان وزوار مدينة مهدية · ولاية تيارت</p>
+    <div class="socials">
+      <a class="ig" href="https://www.instagram.com/_rayan____7" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+      <a href="admin.html" title="لوحة التحكم"><i class="fa-solid fa-sliders"></i></a>
+    </div>
+    <div class="copy">© <span id="year"></span> مهدية · جميع الحقوق محفوظة</div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="#" class="nav-item active" onclick="scrollTop(event)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></a>
+  <a href="#history" class="nav-item" onclick="scrollTo(event,'history')"><i class="fa-regular fa-clock"></i><span>التاريخ</span></a>
+  <a href="#places" class="nav-item" onclick="scrollTo(event,'places')"><i class="fa-solid fa-compass"></i><span>الأماكن</span></a>
+  <a href="admin.html" class="nav-item"><i class="fa-solid fa-sliders"></i><span>الإدارة</span></a>
+</nav>
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-content">
+    <div class="modal-bar"></div>
+    <div class="modal-header">
+      <h3 id="mTitle">تفاصيل</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL = 'https://cneqytgqfefpqhrmytdy.supabase.co';
+const SUPA_KEY = 'sb_publishable_A_ncVEZMzhvf4YigdO29eA_0qjVgv-S';
+const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const IMG = {
+  mosque:"https://images.unsplash.com/photo-1542816417-098367d4f8c6?w=600&q=80",
+  school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
+  health:"https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=600&q=80",
+  pharmacy:"https://images.unsplash.com/photo-1585435557343-3b092031a831?w=600&q=80",
+  bank:"https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&q=80",
+  post:"https://images.unsplash.com/photo-1577412647305-991150c7d163?w=600&q=80",
+  restaurant:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80",
+  cafe:"https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&q=80",
+  transport:"https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=600&q=80",
+  admin:"https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=600&q=80",
+  utility:"https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&q=80",
+  fuel:"https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80",
+  bakery:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80",
+  icecream:"https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&q=80",
+  library:"https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=600&q=80",
+  sport:"https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80",
+  market:"https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80",
+  cemetery:"https://images.unsplash.com/photo-1575052814086-f385e2e2ad5b?w=600&q=80",
+  park:"https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80"
+};
+
+const CAT_ICONS = {
+  'الكل':'fa-solid fa-th-large','إدارة':'fa-solid fa-building','بنوك':'fa-solid fa-landmark',
+  'صحة':'fa-solid fa-hospital','صيدليات':'fa-solid fa-capsules','مساجد':'fa-solid fa-mosque',
+  'تعليم ابتدائي':'fa-solid fa-school','تعليم متوسط':'fa-solid fa-school','تعليم ثانوي':'fa-solid fa-graduation-cap',
+  'تكوين':'fa-solid fa-chalkboard-user','بريد':'fa-solid fa-envelope','اتصالات':'fa-solid fa-wifi',
+  'مطاعم':'fa-solid fa-utensils','مقاهي':'fa-solid fa-mug-saucer','نقل':'fa-solid fa-bus',
+  'وقود':'fa-solid fa-gas-pump','تجارة':'fa-solid fa-store','رياضة':'fa-solid fa-futbol',
+  'ثقافة':'fa-solid fa-book','ترفيه':'fa-solid fa-tree','خدمات':'fa-solid fa-hand-holding-heart',
+  'أمن':'fa-solid fa-shield','طوارئ':'fa-solid fa-truck-fast','مخابز':'fa-solid fa-bread-slice'
+};
+
+let allPlaces = [];
+let curCat = 'الكل';
+let searchTerm = '';
+
+async function loadPlaces(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = Array(3).fill(0).map(()=>`
+    <div class="sk-card"><div class="sk sk-img"></div>
+    <div class="sk-body"><div class="sk sk-line m"></div><div class="sk sk-line s"></div><div class="sk sk-line"></div></div></div>
+  `).join('');
+  
+  try{
+    const {data,error} = await supa.from('places').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    allPlaces = data || [];
+    renderCats();
+    render();
+  }catch(e){
+    console.error(e);
+    allPlaces = [];
+    renderCats();
+    render();
+  }
+}
+
+// ===== GALLERY (من لوحة التحكم) =====
+async function loadGallery(){
+  try{
+    const {data,error} = await supa.from('gallery').select('*').order('created_at',{ascending:false});
+    if(error || !data || !data.length){
+      // صور افتراضية
+      document.getElementById('galleryGrid').innerHTML = `
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80" alt="مهدية" loading="lazy"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="مهدية" loading="lazy"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400&q=80" alt="مهدية" loading="lazy"></div>
+        <div class="gal-item"><img src="https://images.unsplash.com/photo-1470071459604-7b5ec3a7d1c5?w=800&q=80" alt="مهدية" loading="lazy"></div>
+      `;
+      return;
+    }
+    document.getElementById('galleryGrid').innerHTML = data.map(g=>`
+      <div class="gal-item"><img src="${g.image_url}" alt="مهدية" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80'"></div>
+    `).join('');
+  }catch(e){
+    console.error(e);
+  }
+}
+
+function renderCats(){
+  const cats = ['الكل',...new Set(allPlaces.map(p=>p.category))];
+  document.getElementById('cats').innerHTML = cats.map(c=>{
+    const n = c==='الكل' ? allPlaces.length : allPlaces.filter(p=>p.category===c).length;
+    const ic = CAT_ICONS[c] || 'fa-solid fa-tag';
+    return `<button class="cat-pill ${c===curCat?'active':''}" onclick="setCat('${c}')">
+      <i class="${ic}"></i> ${c} <span class="cnt">${n}</span>
+    </button>`;
+  }).join('');
+}
+
+function setCat(c){
+  curCat = c;
+  renderCats();
+  render();
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  const filtered = allPlaces.filter(p=>{
+    const okCat = curCat==='الكل' || p.category===curCat;
+    const q = searchTerm.toLowerCase();
+    const okSearch = !q || `${p.name} ${p.category} ${p.description||''}`.toLowerCase().includes(q);
+    return okCat && okSearch;
+  });
+  
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty"><i class="fa-regular fa-folder-open"></i><p>لا توجد أماكن</p><p class="sub">جرّب تصنيفاً آخر أو ابحث بكلمات مختلفة</p></div>`;
+    return;
+  }
+  
+  grid.innerHTML = filtered.map((p,i)=>{
+    const img = IMG[p.img_key] || IMG.admin;
+    const phone = p.phone || '';
+    return `
+      <div class="card" style="animation-delay:${i*.04}s">
+        <div class="card-img" style="background-image:url('${img}')">
+          <span class="card-icon">${p.icon||'📍'}</span>
+        </div>
+        <div class="card-body">
+          <div>
+            <h3>${p.name}</h3>
+            <span class="cat-tag"><i class="fa-solid fa-tag"></i> ${p.category}</span>
+            <p class="card-desc">${p.description||''}</p>
+          </div>
+          <div class="card-btns">
+            <button class="mini-btn primary" onclick="showDetails(${p.id})"><i class="fa-solid fa-circle-info"></i> تفاصيل</button>
+            ${phone 
+              ? `<a class="mini-btn success" href="tel:${phone.replace(/\s/g,'')}"><i class="fa-solid fa-phone"></i></a>`
+              : `<a class="mini-btn outline" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.search_query||p.name)}"><i class="fa-solid fa-location-dot"></i></a>`
+            }
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showDetails(id){
+  const p = allPlaces.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('mTitle').textContent = p.name;
+  const phone = p.phone || '';
+  let gal = '';
+  if(p.image1 || p.image2){
+    gal = `<div class="gallery-modal">
+      ${p.image1?`<img src="${p.image1}" onerror="this.style.display='none'">`:''}
+      ${p.image2?`<img src="${p.image2}" onerror="this.style.display='none'">`:''}
+    </div>`;
+  }
+  document.getElementById('mBody').innerHTML = `
+    ${gal}
+    <div class="info-row"><i class="fa-solid fa-tag"></i><div><b>التصنيف:</b> ${p.category}</div></div>
+    <div class="info-row"><i class="fa-solid fa-file-lines"></i><div><b>الوصف:</b> ${p.description||'—'}</div></div>
+    <div class="info-row"><i class="fa-solid fa-location-dot"></i><div><b>الإحداثيات:</b> <span style="direction:ltr;display:inline-block">${p.coords||'—'}</span></div></div>
+    ${phone?`<div class="info-row"><i class="fa-solid fa-phone"></i><div><b>الهاتف:</b> <a href="tel:${phone.replace(/\s/g,'')}">${phone}</a></div></div>`:''}
+    <div class="modal-btns">
+      <a class="mini-btn primary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.search_query||p.name)}"><i class="fa-solid fa-location-dot"></i> خريطة</a>
+      <button class="mini-btn outline" onclick="routeTo('${encodeURIComponent(p.search_query||p.name)}')"><i class="fa-solid fa-route"></i> الطريق</button>
+      ${phone?`<a class="mini-btn success" style="grid-column:span 2" href="tel:${phone.replace(/\s/g,'')}"><i class="fa-solid fa-phone"></i> اتصل الآن</a>`:''}
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function routeTo(q){
+  if(!navigator.geolocation){window.open(`https://www.google.com/maps/search/?api=1&query=${q}`,'_blank');return}
+  toast('جارٍ تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const o = `${pos.coords.latitude},${pos.coords.longitude}`;
+      window.open(`https://www.google.com/maps/dir/?api=1&origin=${o}&destination=${q}&travelmode=driving`,'_blank');
+    },
+    ()=>window.open(`https://www.google.com/maps/search/?api=1&query=${q}`,'_blank'),
+    {enableHighAccuracy:true,timeout:8000}
+  );
+}
+
+function locateMe(){
+  if(!navigator.geolocation){toast('GPS غير مدعوم');return}
+  toast('جارٍ تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(
+    pos=>window.open(`https://www.google.com/maps/search/?api=1&query=${pos.coords.latitude},${pos.coords.longitude}`,'_blank'),
+    ()=>toast('تعذر الوصول'),
+    {enableHighAccuracy:true,timeout:10000}
+  );
+}
+
+function copyGPS(){
+  const c = '35.43058, 1.75714';
+  if(navigator.clipboard){navigator.clipboard.writeText(c).then(()=>toast('تم نسخ الإحداثيات'))}
+  else{prompt('انسخ:', c)}
+}
+
+function shareSite(){
+  if(navigator.share){navigator.share({title:'مهدية · الدليل الذكي',text:'دليل أماكن وخدمات مهدية',url:location.href}).catch(()=>{})}
+  else{navigator.clipboard?.writeText(location.href);toast('تم نسخ الرابط')}
+}
+
+document.getElementById('search').addEventListener('input',e=>{searchTerm = e.target.value.trim();render()});
+
+function clearSearch(){document.getElementById('search').value = '';searchTerm = '';render()}
+
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const dark = document.body.classList.contains('dark');
+  localStorage.setItem('dark',dark);
+  document.getElementById('darkBtn').innerHTML = dark?'<i class="fa-regular fa-sun"></i>':'<i class="fa-regular fa-moon"></i>';
+}
+if(localStorage.getItem('dark')==='true'){
+  document.body.classList.add('dark');
+  document.getElementById('darkBtn').innerHTML = '<i class="fa-regular fa-sun"></i>';
+}
+
+let prayerData = null;
+let timerInt = null;
+
+async function loadPrayer(){
+  const now = new Date();
+  const url = `https://api.aladhan.com/v1/timings/${now.toISOString().slice(0,10)}?latitude=35.43057&longitude=1.75495&method=3`;
+  try{
+    const r = await fetch(url);
+    const d = await r.json();
+    if(d.code===200){
+      prayerData = d.data.timings;
+      renderPrayer();
+      if(timerInt) clearInterval(timerInt);
+      timerInt = setInterval(updateTimer,1000);
+    }
+  }catch(e){console.error(e)}
+}
+
+function renderPrayer(){
+  if(!prayerData) return;
+  const lbl = {Fajr:'الفجر',Sunrise:'الشروق',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'};
+  const order = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+  const now = new Date();
+  const nowMin = now.getHours()*60+now.getMinutes();
+  let nextKey = null, nextMin = Infinity;
+  order.forEach(k=>{
+    const [h,m] = prayerData[k].slice(0,5).split(':').map(Number);
+    const t = h*60+m;
+    if(t>nowMin && t<nextMin){nextKey=k;nextMin=t}
+  });
+  if(!nextKey) nextKey='Fajr';
+  document.getElementById('pList').innerHTML = order.map(k=>`
+    <div class="p-item ${k===nextKey?'active':''}">
+      <span class="lbl">${lbl[k]}</span>
+      <span class="tm">${prayerData[k].slice(0,5)}</span>
+    </div>
+  `).join('');
+  document.getElementById('pNext').textContent = lbl[nextKey];
+  document.getElementById('pDate').textContent = now.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'short'});
+}
+
+function updateTimer(){
+  if(!prayerData) return;
+  const now = new Date();
+  const nowMin = now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+  const order = ['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+  let nextMin = Infinity;
+  order.forEach(k=>{
+    const [h,m] = prayerData[k].slice(0,5).split(':').map(Number);
+    const t = h*60+m;
+    if(t>nowMin && t<nextMin) nextMin=t;
+  });
+  if(nextMin===Infinity){
+    const [h,m] = prayerData.Fajr.slice(0,5).split(':').map(Number);
+    nextMin = (h+24)*60+m;
+  }
+  const diff = nextMin-nowMin;
+  const hh = Math.floor(diff/60);
+  const mm = Math.floor(diff%60);
+  document.getElementById('pTimer').textContent = `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+
+function toast(m,type=''){
+  const t = document.getElementById('toast');
+  t.textContent = m;
+  t.className = 'toast '+type;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function scrollTop(e){if(e)e.preventDefault();window.scrollTo({top:0,behavior:'smooth'})}
+function scrollTo(e,id){
+  e.preventDefault();
+  const el = document.getElementById(id);
+  if(el){const top = el.getBoundingClientRect().top+window.scrollY-70;window.scrollTo({top,behavior:'smooth'})}
+}
+
+supa.channel('places-live')
+  .on('postgres_changes',{event:'*',schema:'public',table:'places'},()=>{loadPlaces();toast('تم التحديث')})
+  .subscribe();
+
+supa.channel('gallery-live')
+  .on('postgres_changes',{event:'*',schema:'public',table:'gallery'},()=>{loadGallery()})
+  .subscribe();
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('splash').classList.add('hide'),1000);
+  loadPlaces();
+  loadGallery();
+  loadPrayer();
+});
+</script>
+</body>
+</html>
