@@ -1,0 +1,22 @@
+{
+  "name": "Mahdia · الدليل الشامل",
+  "short_name": "Mahdia",
+  "description": "الدليل الشامل لمدينة مهدية (بوردو سابقاً) - ولاية تيارت - الجزائر",
+  "start_url": "/mahdia/",
+  "scope": "/mahdia/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["travel", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWUzYThhIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGYxNzJhIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmMGQ4OWMiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2M5YTk2MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2I4OTIyYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTE1IiBmaWxsPSJ1cmwoI2JnKSIvPjxwYXRoIGQ9Ik0gMTYwIDM4MCBMIDE2MCAyMjAgUSAxNjAgMTQwIDI1NiAxNDAgUSAzNTIgMTQwIDM1MiAyMjAgTCAzNTIgMzgwIFoiIGZpbGw9InVybCgjZ29sZCkiLz48cGF0aCBkPSJNIDE5NSAzODAgTCAxOTUgMjM1IFEgMTk1IDE3NSAyNTYgMTc1IFEgMzE3IDE3NSAzMTcgMjM1IEwgMzE3IDM4MCBaIiBmaWxsPSJ1cmwoI2JnKSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iOCIgZmlsbD0iI2YwZDg5YyIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iNCIgZmlsbD0iIzFlM2E4YSIvPjx0ZXh0IHg9IjI1NiIgeT0iNDUwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1NiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0idXJsKCNnb2xkKSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+2YXYudiv2YrYqTwvdGV4dD48L3N2Zz4=",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
