@@ -142,7 +142,7 @@ body.dark .tl-card strong{color:var(--gold-light)}
 .card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh);display:flex;transition:var(--tr);animation:cardIn .4s ease both}
 .card:active{transform:scale(.98)}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0;transition:opacity .5s ease, background-image .4s ease}
+.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0;transition:background-image .5s ease, opacity .5s ease}
 .card-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
 .card-body h3{font-size:15.5px;font-weight:800;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .cat-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--navy);background:rgba(30,58,138,.06);padding:4px 11px;border-radius:20px;margin-bottom:8px;width:fit-content;border:1px solid rgba(30,58,138,.08)}
@@ -498,14 +498,14 @@ async function loadPlaces(){
     
     if(error) throw error;
     allPlaces = data || [];
-    console.log('✅ تم تحميل ' + allPlaces.length + ' مكان');
+    console.log(`✅ تم تحميل ${allPlaces.length} مكان`);
     
     renderCats(); 
     render();
     
-    // 🖼️ المرحلة 2: تحميل الصور في الخلفية
+    // 🖼️ المرحلة 2: تحميل الصور بنظام الموجات
     if(allPlaces.length > 0){
-      setTimeout(() => loadImagesInBackground(), 400);
+      setTimeout(() => loadImagesInBackground(), 500);
     }
     
   }catch(e){
@@ -517,71 +517,102 @@ async function loadPlaces(){
 }
 
 // ============================================================
-//  🖼️ المرحلة 2: تحميل الصور بنظام مجموعات + إعادة المحاولة
+//  🌊 تحميل الصور بنظام الموجات (20 صورة كل موجة)
 // ============================================================
 async function loadImagesInBackground(){
   if(!allPlaces.length) return;
   
-  console.log('🖼️ بدء تحميل الصور...');
+  console.log(`🌊 بدء تحميل ${allPlaces.length} صورة بنظام الموجات...`);
   
-  // خذ أول 30 مكان
-  const toLoad = allPlaces.slice(0, 30);
-  const BATCH_SIZE = 5;  // 5 صور بالتوازي
+  const WAVE_SIZE = 20;      // 20 صورة في كل موجة
+  const WAVE_DELAY = 1200;   // 1.2 ثانية بين الموجات
+  let totalLoaded = 0;
+  let totalFailed = 0;
   
-  // دالة جلب مع إعادة المحاولة
-  async function fetchImage(place, retries = 3){
-    for(let attempt = 1; attempt <= retries; attempt++){
-      try{
-        const {data, error} = await supa
-            .from('places')
-            .select('image1')
-            .eq('id', place.id)
-            .single();
-        
-        if(error) throw error;
-        
-        if(data && data.image1 && data.image1.length > 50){
-          place.image1 = data.image1;
-          updateCardImage(place.id, data.image1);
-          return true;
-        }
-        return false;
-        
-      }catch(e){
-        if(attempt < retries){
-          await new Promise(r => setTimeout(r, 400 * attempt));
-        }else{
-          return false;
-        }
+  // قسم جميع الأماكن إلى موجات
+  const waves = [];
+  for(let i = 0; i < allPlaces.length; i += WAVE_SIZE){
+    waves.push(allPlaces.slice(i, i + WAVE_SIZE));
+  }
+  
+  console.log(`📊 عدد الموجات: ${waves.length}`);
+  
+  // دالة جلب صورة واحدة (مع timeout محمي)
+  async function fetchImage(place){
+    try{
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 8000)
+      );
+      
+      const fetchPromise = supa
+          .from('places')
+          .select('image1')
+          .eq('id', place.id)
+          .single();
+      
+      const {data, error} = await Promise.race([fetchPromise, timeoutPromise]);
+      
+      if(error) throw error;
+      
+      if(data && data.image1 && data.image1.length > 50){
+        place.image1 = data.image1;
+        updateCardImage(place.id, data.image1);
+        return true;
       }
+      return false;
+      
+    }catch(e){
+      return false;
     }
   }
   
-  // قسمهم إلى مجموعات وشغّلهم بالتوازي
-  for(let i = 0; i < toLoad.length; i += BATCH_SIZE){
-    const batch = toLoad.slice(i, i + BATCH_SIZE);
-    await Promise.all(batch.map(p => fetchImage(p)));
-    await new Promise(r => setTimeout(r, 200));
+  // 🚀 حمّل كل موجة
+  for(let i = 0; i < waves.length; i++){
+    const wave = waves[i];
+    console.log(`🌊 الموجة ${i + 1}/${waves.length} - ${wave.length} صورة...`);
+    
+    // حمّل كل صور الموجة بالتوازي
+    const results = await Promise.allSettled(wave.map(p => fetchImage(p)));
+    
+    const successCount = results.filter(r => r.value === true).length;
+    const failCount = results.filter(r => r.value === false).length;
+    
+    totalLoaded += successCount;
+    totalFailed += failCount;
+    
+    console.log(`✅ الموجة ${i + 1}: ${successCount} نجحت، ${failCount} فشلت`);
+    
+    // ⏳ انتظار بين الموجات (إلا في الأخيرة)
+    if(i < waves.length - 1){
+      await new Promise(r => setTimeout(r, WAVE_DELAY));
+    }
   }
   
-  console.log('✅ اكتمل تحميل الصور');
+  console.log(`🎉 اكتمل: ${totalLoaded} نجحت، ${totalFailed} فشلت`);
 }
 
 // ============================================================
-//  🎨 تحديث صورة البطاقة (مع التحميل المسبق)
+//  🎨 تحديث صورة البطاقة (مع تحميل مسبق)
 // ============================================================
 function updateCardImage(placeId, imageUrl){
-  const cardImg = document.querySelector(`.card[data-id="${placeId}"] .card-img`);
+  const card = document.querySelector(`.card[data-id="${placeId}"]`);
+  if(!card) return;
+  
+  const cardImg = card.querySelector('.card-img');
   if(!cardImg) return;
   
-  // نحمّل الصورة في الخلفية أولاً
+  // 🔄 حمّل الصورة في الذاكرة أولاً
   const tempImg = new Image();
   tempImg.onload = () => {
-    cardImg.style.backgroundImage = `url('${imageUrl}')`;
-    cardImg.style.opacity = '1';
+    // ✅ عند نجاح التحميل، طبّق التغيير
+    cardImg.style.opacity = '0.3';
+    setTimeout(() => {
+      cardImg.style.backgroundImage = `url('${imageUrl}')`;
+      cardImg.style.opacity = '1';
+    }, 50);
   };
   tempImg.onerror = () => {
-    // لا شيء - نُبقي الصورة الافتراضية
+    // ❌ احتفظ بالافتراضية
   };
   tempImg.src = imageUrl;
 }
@@ -676,7 +707,6 @@ async function showDetails(id){
   
   let image1 = p.image1 || '', image2 = p.image2 || '';
   
-  // إذا لم تكن محمّلة، اجلبها
   if(!image1 || !image2){
     try{
       const {data} = await supa.from('places').select('image1, image2').eq('id', id).single();
@@ -819,7 +849,7 @@ supa.channel('gallery-live').on('postgres_changes',{event:'*',schema:'public',ta
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ============================================================
-//  PWA - Service Worker + Install Banner
+//  PWA
 // ============================================================
 let deferredPrompt;
 
@@ -872,7 +902,7 @@ window.addEventListener('load', () => {
 });
 </script>
 
-<!-- ===== StatCounter - إحصائيات الزوار ===== -->
+<!-- ===== StatCounter ===== -->
 <!-- Default Statcounter code for Mahdia Guide
 https://guemarrayan4-sudo.github.io/mahdia -->
 <script type="text/javascript">
