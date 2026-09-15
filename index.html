@@ -6,23 +6,20 @@
 <meta name="theme-color" content="#1e3a8a">
 <meta name="description" content="الدليل الشامل لمدينة مهدية (بوردو سابقاً) - ولاية تيارت - الجزائر">
 
-<!-- ===== PWA Meta Tags ===== -->
+<!-- PWA Meta Tags -->
 <link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mahdia">
 <meta name="application-name" content="Mahdia">
-<meta name="format-detection" content="telephone=no">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- ===== PWA Icon (داخل الكود - بدون ملفات) ===== -->
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWUzYThhIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGYxNzJhIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmMGQ4OWMiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2M5YTk2MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2I4OTIyYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTE1IiBmaWxsPSJ1cmwoI2JnKSIvPjxwYXRoIGQ9Ik0gMTYwIDM4MCBMIDE2MCAyMjAgUSAxNjAgMTQwIDI1NiAxNDAgUSAzNTIgMTQwIDM1MiAyMjAgTCAzNTIgMzgwIFoiIGZpbGw9InVybCgjZ29sZCkiLz48cGF0aCBkPSJNIDE5NSAzODAgTCAxOTUgMjM1IFEgMTk1IDE3NSAyNTYgMTc1IFEgMzE3IDE3NSAzMTcgMjM1IEwgMzE3IDM4MCBaIiBmaWxsPSJ1cmwoI2JnKSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iOCIgZmlsbD0iI2YwZDg5YyIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iNCIgZmlsbD0iIzFlM2E4YSIvPjx0ZXh0IHg9IjI1NiIgeT0iNDUwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1NiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0idXJsKCNnb2xkKSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+2YXYudiv2YrYqTwvdGV4dD48L3N2Zz4=">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWUzYThhIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGYxNzJhIi8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmMGQ4OWMiLz48c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2M5YTk2MSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2I4OTIyYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTE1IiBmaWxsPSJ1cmwoI2JnKSIvPjxwYXRoIGQ9Ik0gMTYwIDM4MCBMIDE2MCAyMjAgUSAxNjAgMTQwIDI1NiAxNDAgUSAzNTIgMTQwIDM1MiAyMjAgTCAzNTIgMzgwIFoiIGZpbGw9InVybCgjZ29sZCkiLz48cGF0aCBkPSJNIDE5NSAzODAgTCAxOTUgMjM1IFEgMTk1IDE3NSAyNTYgMTc1IFEgMzE3IDE3NSAzMTcgMjM1IEwgMzE3IDM4MCBaIiBmaWxsPSJ1cmwoI2JnKSIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iOCIgZmlsbD0iI2YwZDg5YyIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1NSIgcj0iNCIgZmlsbD0iIzFlM2E4YSIvPjx0ZXh0IHg9IjI1NiIgeT0iNDUwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1NiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0idXJsKCNnb2xkKSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+2YXYudiv2YrYqTwvdGV4dD48L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMWUzYThhIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMGYxNzJhIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTUiIGZpbGw9InVybCgjYmcpIi8+PHBhdGggZD0iTSAxNjAgMzgwIEwgMTYwIDIyMCBRIDE2MCAxNDAgMjU2IDE0MCBRIDM1MiAxNDAgMzUyIDIyMCBMIDM1MiAzODAgWiIgZmlsbD0iI2M5YTk2MSIvPjxwYXRoIGQ9Ik0gMTk1IDM4MCBMIDE5NSAyMzUgUSAxOTUgMTc1IDI1NiAxNzUgUSAzMTcgMTc1IDMxNyAyMzUgTCAzMTcgMzgwIFoiIGZpbGw9IiMxZTNhOGEiLz48L3N2Zz4=">
 
 <title>Mahdia · الدليل الشامل</title>
 
@@ -49,7 +46,7 @@
   --tr:.3s cubic-bezier(.4,0,.2,1);
 }
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding-bottom:80px;overflow-x:hidden}
-body.dark{--bg:#0a0f1c;--card:#111827;--text:#f1f5f9;--muted:#94a3b8;--line:#1f2937;--sh:0 4px 20px rgba(0,0,0,.3);--sh-lg:0 12px 40px rgba(0,0,0,.4);--sh-xl:0 20px 60px rgba(0,0,0,.5)}
+body.dark{--bg:#0a0f1c;--card:#111827;--text:#f1f5f9;--muted:#94a3b8;--line:#1f2937}
 img{display:block;max-width:100%}
 a{text-decoration:none;color:inherit}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -61,7 +58,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .insta-bar::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(201,169,97,.15),transparent);animation:instaShine 3s linear infinite}
 @keyframes instaShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 .insta-link{display:inline-flex;align-items:center;gap:8px;color:#fff;font-weight:700;padding:4px 14px;border-radius:30px;background:linear-gradient(135deg,#E4405F,#C13584);box-shadow:0 4px 15px rgba(228,64,95,.4);transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;z-index:1}
-.insta-link:hover{transform:scale(1.05);box-shadow:0 8px 25px rgba(228,64,95,.6)}
+.insta-link:hover{transform:scale(1.05)}
 .insta-link i{font-size:15px}
 .insta-link .live-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;box-shadow:0 0 10px #22c55e;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
@@ -71,19 +68,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
 body.dark .topbar{background:rgba(10,15,28,.9)}
 .brand{display:flex;align-items:center;gap:11px}
-.brand-mark{width:42px;height:42px;background:var(--grad-navy);border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;box-shadow:0 6px 18px rgba(30,58,138,.25);position:relative;overflow:hidden}
-.brand-mark::after{content:'';position:absolute;top:0;right:0;width:100%;height:100%;background:linear-gradient(135deg,transparent,rgba(201,169,97,.3));border-radius:inherit}
-.brand-mark i{position:relative;z-index:1}
+.brand-mark{width:42px;height:42px;background:var(--grad-navy);border-radius:13px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:19px;box-shadow:0 6px 18px rgba(30,58,138,.25)}
 .brand-text strong{display:block;font-size:17px;font-weight:900;color:var(--text);line-height:1.1}
 .brand-text small{display:block;font-size:10.5px;color:var(--gold);font-weight:700;letter-spacing:.5px}
 .top-actions{display:flex;gap:8px}
 .ic-btn{width:42px;height:42px;border-radius:13px;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:15px;transition:var(--tr);border:1px solid var(--line);color:var(--text)}
-.ic-btn:active{transform:scale(.92);background:var(--bg)}
+.ic-btn:active{transform:scale(.92)}
 
 /* HERO */
 .hero{background:var(--grad-navy);color:#fff;padding:45px 24px 70px;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-50%;right:-30%;width:80%;height:200%;background:radial-gradient(circle,rgba(201,169,97,.18),transparent 60%);border-radius:50%}
-.hero::after{content:'';position:absolute;bottom:-30%;left:-20%;width:60%;height:150%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);border-radius:50%}
 .hero-inner{position:relative;z-index:1;max-width:900px;margin:0 auto}
 .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(201,169,97,.15);border:1px solid rgba(201,169,97,.35);padding:8px 16px;border-radius:30px;font-size:11.5px;font-weight:700;margin-bottom:20px;color:var(--gold-light)}
 .hero-tag .dot{width:7px;height:7px;background:var(--gold);border-radius:50%;box-shadow:0 0 12px var(--gold);animation:pulse 2s infinite}
@@ -110,7 +104,7 @@ body.dark .topbar{background:rgba(10,15,28,.9)}
 /* SECTIONS */
 .section{padding:50px 24px 0;max-width:1200px;margin:0 auto}
 .sec-header{margin-bottom:24px;text-align:center}
-.sec-header h2{font-size:26px;font-weight:900;display:inline-flex;align-items:center;gap:10px;margin-bottom:6px;position:relative}
+.sec-header h2{font-size:26px;font-weight:900;display:inline-flex;align-items:center;gap:10px;margin-bottom:6px}
 .sec-header h2 i{color:var(--gold);font-size:22px}
 .sec-header p{color:var(--muted);font-size:13.5px;font-weight:500}
 
@@ -124,8 +118,7 @@ body.dark .topbar{background:rgba(10,15,28,.9)}
 .tl-item:nth-child(4){animation-delay:.4s}
 @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
 .tl-item::before{content:'';position:absolute;right:-24px;top:22px;width:14px;height:14px;background:var(--card);border:3px solid var(--gold);border-radius:50%;box-shadow:0 0 0 4px var(--bg);z-index:1}
-.tl-card{background:var(--card);border-radius:18px;padding:20px;border:1px solid var(--line);transition:var(--tr);box-shadow:var(--sh)}
-.tl-card:active{transform:scale(.98);box-shadow:var(--sh-lg);border-color:var(--gold)}
+.tl-card{background:var(--card);border-radius:18px;padding:20px;border:1px solid var(--line);box-shadow:var(--sh)}
 .tl-year{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--navy);background:rgba(30,58,138,.06);padding:5px 14px;border-radius:20px;margin-bottom:10px;border:1px solid rgba(30,58,138,.1)}
 body.dark .tl-year{color:var(--gold-light);background:rgba(201,169,97,.1);border-color:rgba(201,169,97,.2)}
 .tl-card h3{font-size:16.5px;font-weight:800;margin-bottom:8px;color:var(--text)}
@@ -155,9 +148,9 @@ body.dark .tl-card strong{color:var(--gold-light)}
 /* PLACES */
 .places-grid{display:grid;gap:14px}
 .card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh);display:flex;transition:var(--tr);animation:cardIn .4s ease both}
-.card:active{transform:scale(.98);box-shadow:var(--sh-lg);border-color:var(--gold)}
+.card:active{transform:scale(.98)}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0}
+.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0;transition:opacity .5s ease, background-image .3s ease}
 .card-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
 .card-body h3{font-size:15.5px;font-weight:800;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .cat-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--navy);background:rgba(30,58,138,.06);padding:4px 11px;border-radius:20px;margin-bottom:8px;width:fit-content;border:1px solid rgba(30,58,138,.08)}
@@ -173,7 +166,6 @@ body.dark .cat-tag{color:var(--gold-light);background:rgba(201,169,97,.08);borde
 /* PRAYER */
 .prayer-card{background:var(--navy-dark);border-radius:24px;padding:24px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh-xl)}
 .prayer-card::before{content:'';position:absolute;top:-60px;left:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(201,169,97,.3),transparent 70%);border-radius:50%}
-.prayer-card::after{content:'';position:absolute;bottom:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(30,64,175,.4),transparent 70%);border-radius:50%}
 .prayer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative;z-index:1;flex-wrap:wrap;gap:10px}
 .prayer-head h3{font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
 .prayer-head h3 i{color:var(--gold)}
@@ -182,7 +174,7 @@ body.dark .cat-tag{color:var(--gold-light);background:rgba(201,169,97,.08);borde
 .p-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 4px;text-align:center;transition:var(--tr)}
 .p-item.active{background:var(--grad-gold);color:var(--navy-dark);transform:scale(1.08);box-shadow:0 12px 30px rgba(201,169,97,.45);border-color:transparent}
 .p-item .lbl{font-size:9.5px;display:block;margin-bottom:4px;opacity:.85;font-weight:600}
-.p-item .tm{font-size:13px;font-weight:800;display:block;font-family:'Cairo',sans-serif}
+.p-item .tm{font-size:13px;font-weight:800;display:block}
 .p-foot{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;align-items:center;font-size:13px;position:relative;z-index:1;flex-wrap:wrap;gap:10px}
 .p-foot strong{color:var(--gold-light);font-weight:800}
 .p-foot .timer{font-weight:800;color:var(--navy-dark);direction:ltr;font-size:15px;background:var(--gold);padding:7px 18px;border-radius:20px;letter-spacing:1px}
@@ -194,7 +186,6 @@ body.dark .cat-tag{color:var(--gold-light);background:rgba(201,169,97,.08);borde
 
 /* FOOTER */
 .footer{background:var(--navy-dark);color:#fff;padding:40px 24px 110px;text-align:center;margin-top:50px;position:relative;overflow:hidden}
-.footer::before{content:'';position:absolute;top:0;right:0;width:400px;height:400px;background:radial-gradient(circle,rgba(201,169,97,.12),transparent 70%);border-radius:50%}
 .footer-inner{max-width:500px;margin:0 auto;position:relative;z-index:1}
 .footer-logo{width:60px;height:60px;background:var(--grad-gold);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:var(--navy-dark);box-shadow:0 15px 40px rgba(201,169,97,.4)}
 .footer h3{font-size:18px;font-weight:900;margin-bottom:8px}
@@ -254,21 +245,20 @@ body.dark .info-row a{color:var(--gold-light)}
 .sk-line.m{width:80%}
 
 /* TOAST */
-.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(200px);background:var(--navy-dark);color:#fff;padding:13px 26px;border-radius:30px;font-size:13px;font-weight:700;z-index:300;transition:.4s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 50px rgba(0,0,0,.3);max-width:90%;text-align:center;border:1px solid rgba(201,169,97,.2)}
+.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(200px);background:var(--navy-dark);color:#fff;padding:13px 26px;border-radius:30px;font-size:13px;font-weight:700;z-index:300;transition:.4s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 50px rgba(0,0,0,.3);max-width:90%;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0)}
-.toast.error{background:#dc2626;border-color:#dc2626}
-.toast.success{background:#059669;border-color:#059669}
+.toast.error{background:#dc2626}
+.toast.success{background:#059669}
 
 /* INSTALL BANNER */
-.install-banner{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;background:linear-gradient(135deg,#1e3a8a,#172554);color:#fff;padding:14px 16px;border-radius:18px;box-shadow:0 20px 50px rgba(30,58,138,.4);z-index:150;display:none;align-items:center;gap:12px;animation:slideUpBanner .5s cubic-bezier(.34,1.56,.64,1)}
+.install-banner{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));left:16px;right:16px;background:linear-gradient(135deg,#1e3a8a,#172554);color:#fff;padding:14px 16px;border-radius:18px;box-shadow:0 20px 50px rgba(30,58,138,.4);z-index:150;display:none;align-items:center;gap:12px;animation:slideUpBanner .5s}
 .install-banner.show{display:flex}
 @keyframes slideUpBanner{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
 .install-icon{width:46px;height:46px;background:var(--grad-gold);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--navy-dark);flex-shrink:0}
 .install-text{flex:1;min-width:0}
 .install-text h4{font-size:13.5px;font-weight:800;margin-bottom:2px}
 .install-text p{font-size:11px;opacity:.8}
-.install-btn{background:var(--grad-gold);color:var(--navy-dark);border:none;padding:9px 16px;border-radius:11px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px}
-.install-btn:active{transform:scale(.95)}
+.install-btn{background:var(--grad-gold);color:var(--navy-dark);border:none;padding:9px 16px;border-radius:11px;font-family:inherit;font-weight:800;font-size:12px;cursor:pointer}
 .install-close{background:transparent;color:rgba(255,255,255,.6);border:none;padding:6px;font-size:14px;cursor:pointer}
 
 /* SPLASH */
@@ -317,10 +307,7 @@ body.dark .info-row a{color:var(--gold-light)}
 <div class="topbar">
   <div class="brand">
     <div class="brand-mark"><i class="fa-solid fa-location-dot"></i></div>
-    <div class="brand-text">
-      <strong>Mahdia</strong>
-      <small>الدليل الشامل</small>
-    </div>
+    <div class="brand-text"><strong>Mahdia</strong><small>الدليل الشامل</small></div>
   </div>
   <div class="top-actions">
     <button class="ic-btn" onclick="toggleDark()" id="darkBtn"><i class="fa-regular fa-moon"></i></button>
@@ -359,7 +346,7 @@ body.dark .info-row a{color:var(--gold-light)}
   <div class="timeline">
     <div class="tl-item"><div class="tl-card"><span class="tl-year"><i class="fa-regular fa-calendar"></i> 1904 - 1905</span><h3>بداية تشكل المدينة الحديثة</h3><p>تأسست مدينة مهدية في بداية القرن العشرين، وكانت تعرف باسم <strong>بوردو (Burdeau)</strong> خلال فترة الاستعمار الفرنسي.</p></div></div>
     <div class="tl-item"><div class="tl-card"><span class="tl-year"><i class="fa-regular fa-calendar"></i> 1924</span><h3>مهدية تصبح بلدية</h3><p>في 15 سبتمبر 1924، صدر مرسوم يقضي بترقية مهدية إلى بلدية كاملة الصلاحية.</p></div></div>
-    <div class="tl-item"><div class="tl-card"><span class="tl-year"><i class="fa-regular fa-calendar"></i> 1962</span><h3>الاستقلال والتحول</h3><p>بعد استقلال الجزائر، تغير اسم المدينة من "بوردو" إلى <strong>مهدية</strong>، وبدأت مرحلة جديدة من التطور.</p></div></div>
+    <div class="tl-item"><div class="tl-card"><span class="tl-year"><i class="fa-regular fa-calendar"></i> 1962</span><h3>الاستقلال والتحول</h3><p>بعد استقلال الجزائر، تغير اسم المدينة من "بوردو" إلى <strong>مهدية</strong>.</p></div></div>
     <div class="tl-item"><div class="tl-card"><span class="tl-year"><i class="fa-solid fa-star"></i> اليوم</span><h3>مهدية · مدينة متطورة</h3><p>مدينة حيوية يقطنها أكثر من 33 ألف نسمة، تضم مستشفى، ثانويات، مراكز تكوين، مساجد، وأسواق.</p></div></div>
   </div>
 </section>
@@ -442,7 +429,7 @@ body.dark .info-row a{color:var(--gold-light)}
   </div>
 </div>
 
-<!-- INSTALL BANNER (PWA) -->
+<!-- INSTALL BANNER -->
 <div class="install-banner" id="installBanner">
   <div class="install-icon"><i class="fa-solid fa-location-dot"></i></div>
   <div class="install-text">
@@ -456,12 +443,14 @@ body.dark .info-row a{color:var(--gold-light)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== CONFIG =====
+// ============================================================
+//  CONFIG
+// ============================================================
 const SUPA_URL = 'https://cneqytgqfefpqhrmytdy.supabase.co';
 const SUPA_KEY = 'sb_publishable_A_ncVEZMzhvf4YigdO29eA_0qjVgv-S';
 const supa = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ===== IMAGES (افتراضية) =====
+// صور افتراضية حسب النوع
 const IMG = {
   mosque:"https://images.unsplash.com/photo-1542816417-098367d4f8c6?w=600&q=80",
   school:"https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
@@ -499,30 +488,101 @@ let allPlaces = [];
 let curCat = 'الكل';
 let searchTerm = '';
 
-// ===== الصورة الذكية =====
-function getPlaceImage(p){
-  if(p.image1 && typeof p.image1 === 'string' && p.image1.length > 50) return p.image1;
-  if(p.image2 && typeof p.image2 === 'string' && p.image2.length > 50) return p.image2;
-  return IMG[p.img_key] || IMG.admin;
-}
-
+// ============================================================
+//  🚀 تحميل البيانات - المرحلة 1: النصوص فقط (سريع)
+// ============================================================
 async function loadPlaces(){
   const grid = document.getElementById('grid');
   grid.innerHTML = Array(3).fill(0).map(()=>`
     <div class="sk-card"><div class="sk sk-img"></div>
     <div class="sk-body"><div class="sk sk-line m"></div><div class="sk sk-line s"></div><div class="sk sk-line"></div></div></div>
   `).join('');
+  
   try{
-    const {data,error} = await supa.from('places').select('*').order('created_at',{ascending:false});
+    // ✅ جلب البيانات النصية فقط (بدون صور)
+    const {data,error} = await supa
+        .from('places')
+        .select('id, name, category, icon, description, search_query, img_key, coords, phone, created_at')
+        .order('created_at',{ascending:false});
+    
     if(error) throw error;
     allPlaces = data || [];
-    renderCats(); render();
+    
+    console.log('✅ تم تحميل ' + allPlaces.length + ' مكان');
+    
+    // عرض فوري (بدون انتظار الصور)
+    renderCats(); 
+    render();
+    
+    // 🖼️ المرحلة 2: ابدأ تحميل الصور في الخلفية
+    if(allPlaces.length > 0){
+      setTimeout(() => loadImagesInBackground(), 300);
+    }
+    
   }catch(e){
-    console.error(e);
-    allPlaces = []; renderCats(); render();
+    console.error('❌ فشل التحميل:', e);
+    allPlaces = []; 
+    renderCats(); 
+    render();
   }
 }
 
+// ============================================================
+//  🖼️ المرحلة 2: تحميل الصور في الخلفية (بدون تعطيل الموقع)
+// ============================================================
+async function loadImagesInBackground(){
+  console.log('🖼️ بدء تحميل الصور في الخلفية...');
+  
+  // تحميل صور الأماكن المعروضة فقط (حد أقصى 30)
+  const displayed = allPlaces.slice(0, 30);
+  let loaded = 0;
+  
+  for(let i = 0; i < displayed.length; i++){
+    const place = displayed[i];
+    
+    // تأخير 150ms بين كل طلب (لتجنب الضغط)
+    await new Promise(r => setTimeout(r, 150));
+    
+    try{
+      const {data,error} = await supa
+          .from('places')
+          .select('image1')
+          .eq('id', place.id)
+          .single();
+      
+      if(!error && data && data.image1 && data.image1.length > 50){
+        // احفظ الصورة في الذاكرة
+        place.image1 = data.image1;
+        // حدّث البطاقة
+        updateCardImage(place.id, data.image1);
+        loaded++;
+      }
+    }catch(e){
+      // تجاهل الأخطاء الفردية
+    }
+  }
+  
+  console.log(`✅ تم تحميل ${loaded} صورة`);
+}
+
+// ============================================================
+//  🎨 تحديث صورة بطاقة واحدة بشكل سلس
+// ============================================================
+function updateCardImage(placeId, imageUrl){
+  const cardImg = document.querySelector(`.card[data-id="${placeId}"] .card-img`);
+  if(!cardImg) return;
+  
+  // انتقال سلس
+  cardImg.style.opacity = '0.3';
+  setTimeout(() => {
+    cardImg.style.backgroundImage = `url('${imageUrl}')`;
+    cardImg.style.opacity = '1';
+  }, 100);
+}
+
+// ============================================================
+//  تحميل معرض الصور
+// ============================================================
 async function loadGallery(){
   try{
     const {data,error} = await supa.from('gallery').select('*').order('created_at',{ascending:false});
@@ -540,6 +600,9 @@ async function loadGallery(){
   }catch(e){console.error(e)}
 }
 
+// ============================================================
+//  عرض التصنيفات
+// ============================================================
 function renderCats(){
   const cats = ['الكل',...new Set(allPlaces.map(p=>p.category))];
   document.getElementById('cats').innerHTML = cats.map(c=>{
@@ -551,6 +614,9 @@ function renderCats(){
 
 function setCat(c){curCat = c; renderCats(); render();}
 
+// ============================================================
+//  عرض الأماكن
+// ============================================================
 function render(){
   const grid = document.getElementById('grid');
   const filtered = allPlaces.filter(p=>{
@@ -559,15 +625,18 @@ function render(){
     const okSearch = !q || `${p.name} ${p.category} ${p.description||''}`.toLowerCase().includes(q);
     return okCat && okSearch;
   });
+  
   if(!filtered.length){
     grid.innerHTML = `<div class="empty"><i class="fa-regular fa-folder-open"></i><p>لا توجد أماكن</p><p class="sub">جرّب تصنيفاً آخر أو ابحث بكلمات مختلفة</p></div>`;
     return;
   }
+  
   grid.innerHTML = filtered.map((p,i)=>{
-    const img = getPlaceImage(p);
+    // 🎯 الصورة: إذا كانت محمّلة → استخدمها، وإلا → الافتراضية
+    const img = (p.image1 && p.image1.length > 50) ? p.image1 : (IMG[p.img_key] || IMG.admin);
     const phone = p.phone || '';
     return `
-      <div class="card" style="animation-delay:${i*.04}s">
+      <div class="card" data-id="${p.id}" style="animation-delay:${i*.04}s">
         <div class="card-img" style="background-image:url('${img}')"></div>
         <div class="card-body">
           <div>
@@ -588,18 +657,43 @@ function render(){
   }).join('');
 }
 
-function showDetails(id){
+// ============================================================
+//  تفاصيل المكان (مع تحميل الصور عند الطلب)
+// ============================================================
+async function showDetails(id){
   const p = allPlaces.find(x=>x.id===id);
   if(!p) return;
+  
   document.getElementById('mTitle').textContent = p.name;
+  document.getElementById('mBody').innerHTML = '<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size:32px;color:var(--gold);"></i><p style="margin-top:12px;color:var(--muted);">جارٍ التحميل...</p></div>';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  
+  // إذا لم تكن الصورة محمّلة، اجلبها الآن
+  let image1 = p.image1 || '', image2 = p.image2 || '';
+  
+  if(!image1 || !image2){
+    try{
+      const {data} = await supa.from('places').select('image1, image2').eq('id', id).single();
+      if(data){ 
+        image1 = data.image1 || image1; 
+        image2 = data.image2 || '';
+        p.image1 = image1;
+        p.image2 = image2;
+        if(image1) updateCardImage(id, image1);
+      }
+    }catch(e){ console.log(e); }
+  }
+  
   const phone = p.phone || '';
   let gal = '';
-  if(p.image1 || p.image2){
+  if(image1 || image2){
     gal = `<div class="gallery-modal">
-      ${p.image1?`<img src="${p.image1}" onerror="this.style.display='none'">`:''}
-      ${p.image2?`<img src="${p.image2}" onerror="this.style.display='none'">`:''}
+      ${image1?`<img src="${image1}" onerror="this.style.display='none'">`:''}
+      ${image2?`<img src="${image2}" onerror="this.style.display='none'">`:''}
     </div>`;
   }
+  
   document.getElementById('mBody').innerHTML = `
     ${gal}
     <div class="info-row"><i class="fa-solid fa-tag"></i><div><b>التصنيف:</b> ${p.category}</div></div>
@@ -612,8 +706,6 @@ function showDetails(id){
       ${phone?`<a class="mini-btn success" style="grid-column:span 2" href="tel:${phone.replace(/\s/g,'')}"><i class="fa-solid fa-phone"></i> اتصل الآن</a>`:''}
     </div>
   `;
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow='hidden';
 }
 
 function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
@@ -663,6 +755,9 @@ if(localStorage.getItem('dark')==='true'){
   document.getElementById('darkBtn').innerHTML = '<i class="fa-regular fa-sun"></i>';
 }
 
+// ============================================================
+//  مواقيت الصلاة
+// ============================================================
 let prayerData = null, timerInt = null;
 async function loadPrayer(){
   const now = new Date();
@@ -710,29 +805,24 @@ function scrollTo(e,id){
   if(el){const top = el.getBoundingClientRect().top+window.scrollY-70;window.scrollTo({top,behavior:'smooth'})}
 }
 
+// ============================================================
+//  REALTIME
+// ============================================================
 supa.channel('places-live').on('postgres_changes',{event:'*',schema:'public',table:'places'},()=>{loadPlaces();toast('تم التحديث')}).subscribe();
 supa.channel('gallery-live').on('postgres_changes',{event:'*',schema:'public',table:'gallery'},()=>{loadGallery()}).subscribe();
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ============================================================
-//  PWA - Service Worker + Install Banner
+//  PWA
 // ============================================================
 let deferredPrompt;
-
-// تسجيل Service Worker (مكتوب مباشرة داخل الصفحة)
 if('serviceWorker' in navigator){
   const swCode = `
-    const CACHE_NAME = 'mahdia-v1';
+    const CACHE_NAME = 'mahdia-v2';
     const urlsToCache = ['./', './index.html', './admin.html', './manifest.json'];
-    self.addEventListener('install', e => {
-      self.skipWaiting();
-      e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache)));
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(names => Promise.all(names.map(n => n !== CACHE_NAME ? caches.delete(n) : null))));
-      self.clients.claim();
-    });
+    self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(urlsToCache))); });
+    self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(names => Promise.all(names.map(n => n !== CACHE_NAME ? caches.delete(n) : null)))); self.clients.claim(); });
     self.addEventListener('fetch', e => {
       if(e.request.method !== 'GET') return;
       if(e.request.url.includes('supabase.co')) return fetch(e.request);
@@ -743,39 +833,31 @@ if('serviceWorker' in navigator){
     });
   `;
   const blob = new Blob([swCode], {type:'application/javascript'});
-  const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).then(()=>console.log('✅ PWA جاهز')).catch(e=>console.log(e));
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).then(()=>console.log('✅ PWA جاهز')).catch(e=>console.log(e));
 }
 
-// عرض بانر التثبيت
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
+  e.preventDefault(); deferredPrompt = e;
   if(localStorage.getItem('pwa_installed') !== 'true'){
     setTimeout(() => document.getElementById('installBanner').classList.add('show'), 3000);
   }
 });
 
 function installPWA(){
-  if(!deferredPrompt){alert('التطبيق مثبّت مسبقاً أو متصفحك لا يدعم التثبيت');return}
+  if(!deferredPrompt){alert('التطبيق مثبّت مسبقاً');return}
   deferredPrompt.prompt();
   deferredPrompt.userChoice.then(choice => {
-    if(choice.outcome === 'accepted'){
-      localStorage.setItem('pwa_installed','true');
-      document.getElementById('installBanner').classList.remove('show');
-    }
+    if(choice.outcome === 'accepted'){localStorage.setItem('pwa_installed','true');document.getElementById('installBanner').classList.remove('show')}
     deferredPrompt = null;
   });
 }
 
 function closeBanner(){document.getElementById('installBanner').classList.remove('show')}
+window.addEventListener('appinstalled', () => {localStorage.setItem('pwa_installed','true');document.getElementById('installBanner').classList.remove('show')});
 
-window.addEventListener('appinstalled', () => {
-  localStorage.setItem('pwa_installed','true');
-  document.getElementById('installBanner').classList.remove('show');
-});
-
-// ===== INIT =====
+// ============================================================
+//  INIT
+// ============================================================
 window.addEventListener('load', () => {
   setTimeout(() => document.getElementById('splash').classList.add('hide'), 4000);
   loadPlaces();
