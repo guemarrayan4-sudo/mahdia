@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1e3a8a">
 <meta name="description" content="الدليل الشامل لمدينة مهدية (بوردو سابقاً) - ولاية تيارت - الجزائر">
 
-<!-- PWA Meta Tags -->
+<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,17 +26,9 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --navy:#1e3a8a;
-  --navy-dark:#172554;
-  --navy-light:#3b82f6;
-  --gold:#c9a961;
-  --gold-light:#e0c989;
-  --white:#ffffff;
-  --bg:#f8fafc;
-  --card:#ffffff;
-  --text:#0f172a;
-  --muted:#64748b;
-  --line:#e2e8f0;
+  --navy:#1e3a8a;--navy-dark:#172554;--navy-light:#3b82f6;
+  --gold:#c9a961;--gold-light:#e0c989;
+  --bg:#f8fafc;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;
   --sh:0 4px 20px rgba(15,23,42,.06);
   --sh-lg:0 12px 40px rgba(15,23,42,.1);
   --sh-xl:0 20px 60px rgba(30,58,138,.15);
@@ -150,7 +142,7 @@ body.dark .tl-card strong{color:var(--gold-light)}
 .card{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--sh);display:flex;transition:var(--tr);animation:cardIn .4s ease both}
 .card:active{transform:scale(.98)}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
-.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0;transition:opacity .5s ease, background-image .3s ease}
+.card-img{width:140px;min-height:150px;flex-shrink:0;background-size:cover;background-position:center;position:relative;background-color:#e2e8f0;transition:opacity .5s ease, background-image .4s ease}
 .card-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
 .card-body h3{font-size:15.5px;font-weight:800;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .cat-tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--navy);background:rgba(30,58,138,.06);padding:4px 11px;border-radius:20px;margin-bottom:8px;width:fit-content;border:1px solid rgba(30,58,138,.08)}
@@ -489,7 +481,7 @@ let curCat = 'الكل';
 let searchTerm = '';
 
 // ============================================================
-//  🚀 تحميل البيانات - المرحلة 1: النصوص فقط (سريع)
+//  🚀 المرحلة 1: تحميل البيانات النصية فقط (سريع جداً)
 // ============================================================
 async function loadPlaces(){
   const grid = document.getElementById('grid');
@@ -499,7 +491,6 @@ async function loadPlaces(){
   `).join('');
   
   try{
-    // ✅ جلب البيانات النصية فقط (بدون صور)
     const {data,error} = await supa
         .from('places')
         .select('id, name, category, icon, description, search_query, img_key, coords, phone, created_at')
@@ -507,20 +498,18 @@ async function loadPlaces(){
     
     if(error) throw error;
     allPlaces = data || [];
-    
     console.log('✅ تم تحميل ' + allPlaces.length + ' مكان');
     
-    // عرض فوري (بدون انتظار الصور)
     renderCats(); 
     render();
     
-    // 🖼️ المرحلة 2: ابدأ تحميل الصور في الخلفية
+    // 🖼️ المرحلة 2: تحميل الصور في الخلفية
     if(allPlaces.length > 0){
-      setTimeout(() => loadImagesInBackground(), 300);
+      setTimeout(() => loadImagesInBackground(), 400);
     }
     
   }catch(e){
-    console.error('❌ فشل التحميل:', e);
+    console.error('❌ فشل:', e);
     allPlaces = []; 
     renderCats(); 
     render();
@@ -528,60 +517,77 @@ async function loadPlaces(){
 }
 
 // ============================================================
-//  🖼️ المرحلة 2: تحميل الصور في الخلفية (بدون تعطيل الموقع)
+//  🖼️ المرحلة 2: تحميل الصور بنظام مجموعات + إعادة المحاولة
 // ============================================================
 async function loadImagesInBackground(){
-  console.log('🖼️ بدء تحميل الصور في الخلفية...');
+  if(!allPlaces.length) return;
   
-  // تحميل صور الأماكن المعروضة فقط (حد أقصى 30)
-  const displayed = allPlaces.slice(0, 30);
-  let loaded = 0;
+  console.log('🖼️ بدء تحميل الصور...');
   
-  for(let i = 0; i < displayed.length; i++){
-    const place = displayed[i];
-    
-    // تأخير 150ms بين كل طلب (لتجنب الضغط)
-    await new Promise(r => setTimeout(r, 150));
-    
-    try{
-      const {data,error} = await supa
-          .from('places')
-          .select('image1')
-          .eq('id', place.id)
-          .single();
-      
-      if(!error && data && data.image1 && data.image1.length > 50){
-        // احفظ الصورة في الذاكرة
-        place.image1 = data.image1;
-        // حدّث البطاقة
-        updateCardImage(place.id, data.image1);
-        loaded++;
+  // خذ أول 30 مكان
+  const toLoad = allPlaces.slice(0, 30);
+  const BATCH_SIZE = 5;  // 5 صور بالتوازي
+  
+  // دالة جلب مع إعادة المحاولة
+  async function fetchImage(place, retries = 3){
+    for(let attempt = 1; attempt <= retries; attempt++){
+      try{
+        const {data, error} = await supa
+            .from('places')
+            .select('image1')
+            .eq('id', place.id)
+            .single();
+        
+        if(error) throw error;
+        
+        if(data && data.image1 && data.image1.length > 50){
+          place.image1 = data.image1;
+          updateCardImage(place.id, data.image1);
+          return true;
+        }
+        return false;
+        
+      }catch(e){
+        if(attempt < retries){
+          await new Promise(r => setTimeout(r, 400 * attempt));
+        }else{
+          return false;
+        }
       }
-    }catch(e){
-      // تجاهل الأخطاء الفردية
     }
   }
   
-  console.log(`✅ تم تحميل ${loaded} صورة`);
+  // قسمهم إلى مجموعات وشغّلهم بالتوازي
+  for(let i = 0; i < toLoad.length; i += BATCH_SIZE){
+    const batch = toLoad.slice(i, i + BATCH_SIZE);
+    await Promise.all(batch.map(p => fetchImage(p)));
+    await new Promise(r => setTimeout(r, 200));
+  }
+  
+  console.log('✅ اكتمل تحميل الصور');
 }
 
 // ============================================================
-//  🎨 تحديث صورة بطاقة واحدة بشكل سلس
+//  🎨 تحديث صورة البطاقة (مع التحميل المسبق)
 // ============================================================
 function updateCardImage(placeId, imageUrl){
   const cardImg = document.querySelector(`.card[data-id="${placeId}"] .card-img`);
   if(!cardImg) return;
   
-  // انتقال سلس
-  cardImg.style.opacity = '0.3';
-  setTimeout(() => {
+  // نحمّل الصورة في الخلفية أولاً
+  const tempImg = new Image();
+  tempImg.onload = () => {
     cardImg.style.backgroundImage = `url('${imageUrl}')`;
     cardImg.style.opacity = '1';
-  }, 100);
+  };
+  tempImg.onerror = () => {
+    // لا شيء - نُبقي الصورة الافتراضية
+  };
+  tempImg.src = imageUrl;
 }
 
 // ============================================================
-//  تحميل معرض الصور
+//  معرض الصور
 // ============================================================
 async function loadGallery(){
   try{
@@ -601,7 +607,7 @@ async function loadGallery(){
 }
 
 // ============================================================
-//  عرض التصنيفات
+//  التصنيفات
 // ============================================================
 function renderCats(){
   const cats = ['الكل',...new Set(allPlaces.map(p=>p.category))];
@@ -632,7 +638,6 @@ function render(){
   }
   
   grid.innerHTML = filtered.map((p,i)=>{
-    // 🎯 الصورة: إذا كانت محمّلة → استخدمها، وإلا → الافتراضية
     const img = (p.image1 && p.image1.length > 50) ? p.image1 : (IMG[p.img_key] || IMG.admin);
     const phone = p.phone || '';
     return `
@@ -658,7 +663,7 @@ function render(){
 }
 
 // ============================================================
-//  تفاصيل المكان (مع تحميل الصور عند الطلب)
+//  تفاصيل المكان
 // ============================================================
 async function showDetails(id){
   const p = allPlaces.find(x=>x.id===id);
@@ -669,9 +674,9 @@ async function showDetails(id){
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow='hidden';
   
-  // إذا لم تكن الصورة محمّلة، اجلبها الآن
   let image1 = p.image1 || '', image2 = p.image2 || '';
   
+  // إذا لم تكن محمّلة، اجلبها
   if(!image1 || !image2){
     try{
       const {data} = await supa.from('places').select('image1, image2').eq('id', id).single();
@@ -814,9 +819,10 @@ supa.channel('gallery-live').on('postgres_changes',{event:'*',schema:'public',ta
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ============================================================
-//  PWA
+//  PWA - Service Worker + Install Banner
 // ============================================================
 let deferredPrompt;
+
 if('serviceWorker' in navigator){
   const swCode = `
     const CACHE_NAME = 'mahdia-v2';
@@ -865,5 +871,22 @@ window.addEventListener('load', () => {
   loadPrayer();
 });
 </script>
+
+<!-- ===== StatCounter - إحصائيات الزوار ===== -->
+<!-- Default Statcounter code for Mahdia Guide
+https://guemarrayan4-sudo.github.io/mahdia -->
+<script type="text/javascript">
+var sc_project=13355134; 
+var sc_invisible=1; 
+var sc_security="36470631"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13355134/0/36470631/1/" alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+
 </body>
 </html>
